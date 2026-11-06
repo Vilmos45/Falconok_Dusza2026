@@ -12,12 +12,12 @@ function generateTable(x, y, arr) {
             cell.setAttribute("x", j);
             cell.setAttribute("y", i);
             if (arr?.[i]?.[j] !== undefined) cell.textContent = arr[i][j];
-
+            cell.addEventListener("click",() => {cell.contentEditable = "true"; });
             row.appendChild(cell);
         }
         table.appendChild(row);
     }
-    console.log("Table set!");
+    console.info("Table set!");
 }
 
 

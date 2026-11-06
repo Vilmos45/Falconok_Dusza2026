@@ -9,6 +9,7 @@ const ARITH_OPS   = new Set(["+","-","*"]);
 const COMPARE_OPS = new Set(["<","<=",">",">="]);
 const EQUALITY_OPS = new Set(["=","<>"]);
 const LOGIC_OPS   = new Set(["and","or"]);
+const terminal = document.getElementById("terminal");
 
 // ---------- Hibák ----------
 class MineSyntaxError extends Error {
@@ -323,7 +324,6 @@ class Interpreter {
 // 5. ui
 const codeInput = document.getElementById("codeInput");
 const startTheCodeButton = document.getElementById("startTheCodeButton");
-const outputDiv = document.getElementById("output");   // opcionális
 
 // Egyszerű default pálya: [üres, üres, arany, üres, arany, üres, arany, üres, fal]
 const DEFAULT_MAP   = [[0,0,2,0,2,0,2,0,1]];
@@ -347,10 +347,10 @@ print count`;
 if (codeInput && !codeInput.value) codeInput.value = DEFAULT_PROGRAM;
 
 function showOutput(msg) {
-    if (outputDiv) outputDiv.textContent += msg + "\n";
-    console.log(msg);
+    if (terminal) terminal.textContent += msg + "\n";
 }
-function clearOutput() { if (outputDiv) outputDiv.textContent = ""; }
+
+function clearOutput() { if (terminal) terminal.textContent = ""; }
 
 function highlightLine(lineNum) {
     if (!codeInput || !lineNum) return;
@@ -376,7 +376,7 @@ if (startTheCodeButton) {
             if (e instanceof MineSyntaxError) {
                 showOutput(e.message);
                 highlightLine(e.lineNum);
-            } else showOutput("Váratlan hiba: " + e.message);
+            } else showOutput("\nVáratlan hiba: " + e.message);
             return;
         }
 
@@ -388,7 +388,7 @@ if (startTheCodeButton) {
         const interp = new Interpreter(robot, v => showOutput(String(v)));
         try {
             await interp.run(program);
-            showOutput(`--- Futás vége. Utasítások: ${interp.instructionCount} ---`);
+            showOutput(`\n--- Futás vége. Utasítások: ${interp.instructionCount} ---`);
         } catch (e) {
             if (e instanceof MineRuntimeError) showOutput("Futásidejű hiba: " + e.message);
             else showOutput("Váratlan hiba: " + e.message);

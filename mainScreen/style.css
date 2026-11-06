@@ -1,14 +1,23 @@
+body{
+    background-color:rgb(70, 70, 70);
+}
+
 #parentDiv{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(1, 1fr);
     gap: 13px;
 }
+
 #table {
     display: flex;
     flex-direction: column;
     gap: 2px;
     margin-top: 20vh;
+    margin-left: 5vw;
+}
+
+#fileInput{
     margin-left: 5vw;
 }
 
@@ -27,11 +36,6 @@
     overflow: hidden;
 }
 
-label {
-   
-}body{
-    background-color:rgb(70, 70, 70);
-}
 #codeTitle{
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: rgb(45, 255, 45);
@@ -54,4 +58,15 @@ label {
 #codingSide {
   margin-left: 13vw;
   margin-top: 17vh;
+}
+
+#terminal{
+    background-color: black;
+    color: rgb(45, 255, 45);
+    border-radius: 10px;
+    padding-left: 5px;
+    padding-top: 5px;
+
+    width: 20vw;
+    height: 10vh;
 }
