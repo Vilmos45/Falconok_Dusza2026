@@ -3,9 +3,6 @@ import { generateTable } from "./ui.js";
 const table = document.getElementById("table");
 const fileInput = document.getElementById("fileInput")
 
-table.addEventListener("click", () => {
-    fileInput.click();
-});
 table.addEventListener("dragover", (e) => {
     e.preventDefault();
     table.classList.add("dragover");

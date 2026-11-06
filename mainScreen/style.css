@@ -1,14 +1,23 @@
+body{
+    background-color:rgb(70, 70, 70);
+}
+
 #parentDiv{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(1, 1fr);
     gap: 13px;
 }
+
 #table {
     display: flex;
     flex-direction: column;
     gap: 2px;
     margin-top: 20vh;
+    margin-left: 5vw;
+}
+
+#fileInput{
     margin-left: 5vw;
 }
 
@@ -24,9 +33,9 @@
     background-color: rgb(192, 172, 172);
     flex-shrink: 0;
     font-family: monospace;
-}body{
-    background-color:rgb(70, 70, 70);
+    overflow: hidden;
 }
+
 #codeTitle{
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: rgb(45, 255, 45);
@@ -65,10 +74,13 @@
   margin-top: 17vh;
 }
 
-#output{
-    background-color: white;
+#terminal{
+    background-color: black;
+    color: rgb(45, 255, 45);
+    border-radius: 10px;
+    padding-left: 5px;
+    padding-top: 5px;
+
     width: 20vw;
-    border: 3px solid black;
-    border-radius: 5px;
-    text-align: left;
+    height: 10vh;
 }
