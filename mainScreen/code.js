@@ -1,4 +1,5 @@
-// ---------- Konstansok ----------
+import { forward, turn, mine } from "./robot";
+
 const KEYWORDS = new Set([
     "and","by","else","false","forward","here","if",
     "isthere","mine","not","or","print","set","step",
@@ -11,7 +12,7 @@ const EQUALITY_OPS = new Set(["=","<>"]);
 const LOGIC_OPS   = new Set(["and","or"]);
 const terminal = document.getElementById("terminal");
 
-// ---------- Hibák ----------
+
 class MineSyntaxError extends Error {
     constructor(lineNum, message) {
         super(`Szintaktikai hiba a(z) ${lineNum}. sorban: ${message}`);
@@ -27,13 +28,13 @@ class MineRuntimeError extends Error {
     }
 }
 
-// ---------- Token segédek ----------
+
 const isKeyword     = t => KEYWORDS.has(t.toLowerCase());
 const isValidIdent  = t => /^[a-zA-Z][a-zA-Z0-9]*$/.test(t) && !isKeyword(t);
 const isNumberTok   = t => /^[0-9]+$/.test(t);
 const isBooleanLit  = t => t === "true" || t === "false";
 
-// 1. tokenizálás
+
 function tokenizeLine(raw, lineNum) {
     if (raw.includes("\t")) throw new MineSyntaxError(lineNum, "Tab használata tilos.");
     if (raw.trim() === "")  throw new MineSyntaxError(lineNum, "Üres sor nem megengedett.");
@@ -43,7 +44,7 @@ function tokenizeLine(raw, lineNum) {
     return { lineNum, indent, tokens: text.split(" "), text };
 }
 
-// 2. PARSZER (AST)
+
 function parseSimpleVal(token, lineNum) {
     if (isBooleanLit(token)) return { kind:'bool', value: token === "true" };
     if (isNumberTok(token)) {
@@ -125,7 +126,7 @@ function parseProgram(code) {
     function parseBlock(minIndent) {
         if (idx >= lines.length) return [];
         const blockIndent = lines[idx].indent;
-        if (blockIndent <= minIndent) return [];        // üres blokk
+        if (blockIndent <= minIndent) return [];
 
         const stmts = [];
         while (idx < lines.length) {
@@ -168,53 +169,13 @@ function parseProgram(code) {
     return program;
 }
 
-// 3. robot szimulációja
-class Robot {
-    static DX = [0, 1, 0, -1];   // fel, jobbra, le, balra
-    static DY = [-1, 0, 1, 0];
 
-    constructor(map, x, y, dir) { this.map = map; this.x = x; this.y = y; this.dir = dir; }
-
-    _inBounds(x, y) { return y >= 0 && y < this.map.length && x >= 0 && x < this.map[0].length; }
-    _cellAt(x, y)   { return this._inBounds(x, y) ? this.map[y][x] : 1; }   // fal a pályán kívül
-    _frontCell()    { return this._cellAt(this.x + Robot.DX[this.dir], this.y + Robot.DY[this.dir]); }
-
-    isThere(w) {
-        if (typeof w !== 'number' || !Number.isInteger(w) || ![0,1,2].includes(w))
-            throw new MineRuntimeError('E_BAD_ARG', `Az isThere paramétere 0, 1 vagy 2 kell legyen, de ${w} lett.`);
-        return this._frontCell() === w;
-    }
-    forward(n) {
-        if (typeof n !== 'number' || !Number.isInteger(n) || n < 0)
-            throw new MineRuntimeError('E_BAD_ARG', `A step forward paramétere nemnegatív egész kell legyen, de ${n} lett.`);
-        const dx = Robot.DX[this.dir], dy = Robot.DY[this.dir];
-        for (let i = 1; i <= n; i++) {
-            const nx = this.x + dx*i, ny = this.y + dy*i;
-            if (this._cellAt(nx, ny) === 1)
-                throw new MineRuntimeError('E_BEDROCK_HIT', `A robot falba ütközne a (${nx}, ${ny}) mezőn.`);
-        }
-        this.x += dx*n; this.y += dy*n;
-    }
-    turn(n) {
-        if (typeof n !== 'number' || !Number.isInteger(n) || n < 0)
-            throw new MineRuntimeError('E_BAD_ARG', `A turn by paramétere nemnegatív egész kell legyen, de ${n} lett.`);
-        this.dir = ((this.dir - n) % 4 + 4) % 4;   // balra = óramutató járásával ellentétesen
-    }
-    mine() {
-        if (this._cellAt(this.x, this.y) !== 2)
-            throw new MineRuntimeError('E_NO_GOLD', `A (${this.x}, ${this.y}) mezőn nincs arany.`);
-        this.map[this.y][this.x] = 0;
-    }
-}
-
-// 4. végrehajtás
 class Interpreter {
-    constructor(robot, outputFn) {
-        this.robot = robot;
-        this.variables = new Map();          // name -> { value, type }
+    constructor(outputFn) {
+        this.variables = new Map();
         this.outputFn = outputFn || (x => console.log(x));
         this.instructionCount = 0;
-        this.maxInstructions = 1_000_000;    // védőkorlát végtelen ciklus ellen
+        this.maxInstructions = 1_000_000;
     }
     _count() {
         if (++this.instructionCount > this.maxInstructions)
@@ -234,9 +195,9 @@ class Interpreter {
                 this.setVariable(stmt.name, v);
                 break;
             }
-            case 'step':  this.robot.forward(this.evaluateSimpleVal(stmt.arg)); break;
-            case 'turn':  this.robot.turn(this.evaluateSimpleVal(stmt.arg));    break;
-            case 'mine':  this.robot.mine();                                    break;
+            case 'step':  forward(this.evaluateSimpleVal(stmt.arg), x, y); break;
+            case 'turn':  turn(this.evaluateSimpleVal(stmt.arg), x, y);    break;
+            case 'mine':  mine(x, y);                                    break;
             case 'print': this.outputFn(this.evaluateSimpleVal(stmt.arg));      break;
             case 'if': {
                 const c = this.evaluateSimpleVal(stmt.cond);
@@ -296,12 +257,10 @@ class Interpreter {
             }
             case 'binop': {
                 const op = expr.op;
-                // Bal operandus
                 const left = this.evaluateSimpleVal(expr.left);
                 if (ARITH_OPS.has(op)   && typeof left !== 'number')  throw new MineRuntimeError('E_BAD_OPERAND', `A(z) "${op}" bal operandusa egész kell legyen.`);
                 if (COMPARE_OPS.has(op) && typeof left !== 'number')  throw new MineRuntimeError('E_BAD_OPERAND', `A(z) "${op}" bal operandusa egész kell legyen.`);
                 if (LOGIC_OPS.has(op)   && typeof left !== 'boolean') throw new MineRuntimeError('E_BAD_OPERAND', `A(z) "${op}" bal operandusa logikai kell legyen.`);
-                // Jobb operandus (akkor is beolvassa, ha rövidzár lehetséges)
                 const right = this.evaluateSimpleVal(expr.right);
                 if (ARITH_OPS.has(op)   && typeof right !== 'number')  throw new MineRuntimeError('E_BAD_OPERAND', `A(z) "${op}" jobb operandusa egész kell legyen.`);
                 if (COMPARE_OPS.has(op) && typeof right !== 'number')  throw new MineRuntimeError('E_BAD_OPERAND', `A(z) "${op}" jobb operandusa egész kell legyen.`);
@@ -321,13 +280,13 @@ class Interpreter {
     }
 }
 
-// 5. ui
+
 const codeInput = document.getElementById("codeInput");
 const startTheCodeButton = document.getElementById("startTheCodeButton");
 
-// Egyszerű default pálya: [üres, üres, arany, üres, arany, üres, arany, üres, fal]
+
 const DEFAULT_MAP   = [[0,0,2,0,2,0,2,0,1]];
-const DEFAULT_START = { x:0, y:0, dir:1 };  // jobbra néz
+const DEFAULT_START = { x:0, y:0, dir:1 };
 
 const DEFAULT_PROGRAM = `set count to 0
 set fal to isThere 1
@@ -366,12 +325,10 @@ if (startTheCodeButton) {
     startTheCodeButton.addEventListener("click", async () => {
         clearOutput();
         if (!codeInput) return;
-        const code = codeInput.value;
 
-        // 1) Szintaktikai elemzés
         let program;
         try {
-            program = parseProgram(code);
+            program = parseProgram(codeInput.value);
         } catch (e) {
             if (e instanceof MineSyntaxError) {
                 showOutput(e.message);
@@ -380,12 +337,7 @@ if (startTheCodeButton) {
             return;
         }
 
-        // 2) Robot létrehozása (a térkép másolva, hogy minden futás tiszta legyen)
-        const mapCopy = DEFAULT_MAP.map(r => r.slice());
-        const robot = new Robot(mapCopy, DEFAULT_START.x, DEFAULT_START.y, DEFAULT_START.dir);
-
-        // 3) Végrehajtás
-        const interp = new Interpreter(robot, v => showOutput(String(v)));
+        const interp = new Interpreter(v => showOutput(String(v)));
         try {
             await interp.run(program);
             showOutput(`\n--- Futás vége. Utasítások: ${interp.instructionCount} ---`);
