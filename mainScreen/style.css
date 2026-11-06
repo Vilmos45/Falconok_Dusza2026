@@ -1,0 +1,19 @@
+#table {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    gap: 2px;
+}
+
+.cell {
+    height: 3vh;
+    width: 3vh;
+    background-color: rgb(192, 172, 172);
+    flex-shrink: 0;
+    font-family: monospace;
+}

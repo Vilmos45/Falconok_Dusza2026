@@ -1,16 +1,23 @@
-function generateTable(){
-for (let i = 0; i < 15; i++) {//1-15, 1-15
-        let row = '<div class = "row">';
-        for (let j = 0; j < 15; j++) {
-            row += '<div class="cell"></div>';
+export {generateTable};
+const table = document.getElementById("table");
+
+function generateTable(x, y, arr) {
+    table.replaceChildren();
+    for (let i = 0; i < x; i++) {
+        const row = document.createElement("div");
+        row.classList.add("row");
+        for (let j = 0; j < y; j++) {
+            const cell = document.createElement("div");
+            cell.classList.add("cell");
+            cell.setAttribute("x", j);
+            cell.setAttribute("y", i);
+            if (arr?.[i]?.[j] !== undefined) cell.textContent = arr[i][j];
+            row.appendChild(cell);
         }
-        row += "</div>";
-        document.getElementById("table").innerHTML += row;
+        table.appendChild(row);
     }
-    console.log("...");
+    console.log("Table set!");
 }
 
 
-generateTable();
-
-    console.log("set");
+generateTable(10, 15, "");
