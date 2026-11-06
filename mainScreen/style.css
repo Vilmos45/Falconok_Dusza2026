@@ -40,13 +40,35 @@
     width: 20vw;
     height: 40vh;
 }
-#startTheCodeButton{
+#startTheCodeButton {
     background-color: greenyellow;
     color: green;
+    font-size: 1rem;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 700;
+    border-radius: 10px;
+    border: none;
+    
+
+    padding: 15px 30px;
+    min-width: 120px;   
+    cursor: pointer;    
+    transition: 0.2s;   
+}
+
+#startTheCodeButton:hover {
+    background-color: #9acd32; 
 }
 
 #codingSide {
   margin-left: 13vw;
   margin-top: 17vh;
+}
+
+#output{
+    background-color: white;
+    width: 20vw;
+    border: 3px solid black;
+    border-radius: 5px;
+    text-align: left;
 }
