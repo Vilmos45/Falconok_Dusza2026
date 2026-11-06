@@ -1,0 +1,21 @@
+body{
+    background-color:rgb(70, 70, 70);
+}
+#codeTitle{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: rgb(45, 255, 45);
+}
+#codeInput{
+    background-color: black;
+    color: rgb(45, 255, 45);
+    border-radius: 10px;
+    padding-left: 5px;
+    padding-top: 5px;
+    width: 15vw;
+    height: 40vh;
+}
+#startTheCodeButton{
+    background-color: greenyellow;
+    color: green;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
