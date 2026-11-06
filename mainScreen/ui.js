@@ -12,6 +12,7 @@ function generateTable(x, y, arr) {
             cell.setAttribute("x", j);
             cell.setAttribute("y", i);
             if (arr?.[i]?.[j] !== undefined) cell.textContent = arr[i][j];
+
             row.appendChild(cell);
         }
         table.appendChild(row);

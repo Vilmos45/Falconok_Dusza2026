@@ -16,4 +16,9 @@
     background-color: rgb(192, 172, 172);
     flex-shrink: 0;
     font-family: monospace;
+    overflow: hidden;
+}
+
+label {
+   
 }
