@@ -11,10 +11,16 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="table"></div>
-    <input type="file" id="fileInput" accept=".txt,.map,.csv" hidden>
-    <h2 id="codeTitle">Code</h2>
-    <textarea id="codeInput" spellcheck="false" placeholder="set arany to isThere 2&#10;print arany"></textarea>
-    <button id="startTheCodeButton" class="btn btn-primary">Start the code</button>
+    <div id="parentDiv">
+        <div id="map">
+            <div id="table"></div>
+            <input type="file" id="fileInput" accept=".txt,.map,.csv" hidden>
+        </div>
+        <div id="codingSide">
+            <h2 id="codeTitle">Code</h2>
+            <textarea id="codeInput" spellcheck="false" placeholder="set arany to isThere 2&#10;print arany"></textarea> <br>
+            <button id="startTheCodeButton" class="btn btn-primary">Start</button>
+        </div>
+    </div>
 </body>
 </html>
