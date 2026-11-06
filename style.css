@@ -52,20 +52,6 @@ button {
     box-shadow: 0 20px 60px rgba(35, 40, 80, .10);
 }
 
-.logo {
-    width: 52px;
-    height: 52px;
-    display: grid;
-    place-items: center;
-    margin-bottom: 28px;
-    border-radius: 15px;
-    color: white;
-    font-size: 26px;
-    font-weight: 800;
-    background: linear-gradient(135deg, #817aff, #5147e8);
-    box-shadow: 0 6px 18px rgba(99, 91, 255, .3);
-}
-
 h1 {
     font-size: 29px;
     margin-bottom: 9px;
