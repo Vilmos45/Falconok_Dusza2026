@@ -1,4 +1,13 @@
 
+function elmentett_jelszo(){
+    const username = localStorage.getItem("username");
+    const password = localStorage.getItem("password");
+
+    if(username && password){
+
+    }
+}
+
 const loginForm = document.getElementById("loginForm");
 const usernameInput = document.getElementById("username");
 const passwordInput = document.getElementById("password");
@@ -53,15 +62,7 @@ async function postJSON(url, data) {
     return result;
 }
 
-// Bejelentkezés
-loginForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    setStatus(loginStatus, "");
-
-    const username = usernameInput.value.trim();
-    const password = passwordInput.value;
-
+async function bejelentkezes(username, password){
     if (!username || !password) {
         setStatus(loginStatus, "Fill in all the fields", "error");
         return;
@@ -71,13 +72,16 @@ loginForm.addEventListener("submit", async (event) => {
     loginButton.textContent = "Logging in...";
 
     try {
-        const result = await postJSON("/api/auth/login", {
+        const result = await postJSON("bejelentkez.php", {
             username: username,
             password: password
         });
 
         // Sikeres bejelentkezés utáni átirányítás
         if (result.redirectUrl) {
+            sessionStorage.setItem("username", username);
+            sessionStorage.setItem("password", password);
+
             const target = new URL(
                 result.redirectUrl,
                 window.location.origin
@@ -111,6 +115,18 @@ loginForm.addEventListener("submit", async (event) => {
         loginButton.disabled = false;
         loginButton.textContent = "Login";
     }
+}
+
+// Bejelentkezés
+loginForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    setStatus(loginStatus, "");
+
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value;
+
+    bejelentkezes(username, password);
 });
 
 

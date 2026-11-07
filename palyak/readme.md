@@ -1,0 +1,1 @@
+ebbe a mappába mennek a pályák txt fáljjai.
