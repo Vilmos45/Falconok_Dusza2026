@@ -1,3 +1,4 @@
+// const { captureOwnerStack } = require("react");
 
 function elmentett_jelszo(){
     const username = localStorage.getItem("username");
@@ -17,7 +18,7 @@ const loginStatus = document.getElementById("loginStatus");
 
 const togglePassword = document.getElementById("togglePassword");
 
-const forgotPassword = document.getElementById("forgotPassword");
+// const forgotPassword = document.getElementById("forgotPassword");
 const resetDialog = document.getElementById("resetDialog");
 const resetForm = document.getElementById("resetForm");
 const resetEmail = document.getElementById("resetEmail");
@@ -50,7 +51,7 @@ async function postJSON(url, data) {
     try {
         result = await response.json();
     } catch {
-        // Üres vagy nem JSON válasz
+        console.log("Ilyenkor mi van? 656565");
     }
 
     if (!response.ok) {
@@ -62,7 +63,7 @@ async function postJSON(url, data) {
     return result;
 }
 
-async function bejelentkezes(username, password){
+async function bejelentkezes(username, password, regisztracio_e){
     if (!username || !password) {
         setStatus(loginStatus, "Fill in all the fields", "error");
         return;
@@ -74,7 +75,8 @@ async function bejelentkezes(username, password){
     try {
         const result = await postJSON("bejelentkez.php", {
             username: username,
-            password: password
+            password: password,
+            regisztracio_e: regisztracio_e
         });
 
         // Sikeres bejelentkezés utáni átirányítás
@@ -126,10 +128,13 @@ loginForm.addEventListener("submit", async (event) => {
     const username = usernameInput.value.trim();
     const password = passwordInput.value;
 
-    bejelentkezes(username, password);
+    const regisztracio_e = event.submitter.id === "registrate";
+
+    bejelentkezes(username, password, regisztracio_e);
 });
 
 
+/*
 // Jelszó-visszaállító ablak megnyitása
 forgotPassword.addEventListener("click", () => {
     resetForm.reset();
@@ -138,7 +143,7 @@ forgotPassword.addEventListener("click", () => {
     resetDialog.showModal();
     resetEmail.focus();
 });
-
+*/
 
 // Ablak bezárása
 closeReset.addEventListener("click", () => {
@@ -152,11 +157,12 @@ resetDialog.addEventListener("click", (event) => {
     }
 });
 
+/*
 // Bezárás után fókusz visszaállítása
 resetDialog.addEventListener("close", () => {
     forgotPassword.focus();
 });
-
+*/
 
 // Jelszó-visszaállítás kérése
 resetForm.addEventListener("submit", async (event) => {

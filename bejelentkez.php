@@ -21,6 +21,7 @@ if (!is_array($data)) {
 
 $username = trim($data["username"] ?? "");
 $password = $data["password"] ?? "";
+$regisztracio_e = $data["regisztracio_e"] ?? "";
 
 if ($username === "" || $password === "") {
     http_response_code(400);
@@ -31,7 +32,7 @@ if ($username === "" || $password === "") {
 // Adatbázis-kapcsolat
 try {
     $pdo = new PDO(
-        "mysql:host=localhost;dbname=irogatos;charset=utf8mb4",
+        "mysql:host=localhost;dbname=robotszim;charset=utf8mb4",
         "root",
         "",
         [
@@ -40,11 +41,45 @@ try {
         ]
     );
 
+    if ($regisztracio_e) {
+        // Check if username already exists
+        $stmt = $pdo->prepare(
+            "SELECT username
+            FROM users
+            WHERE username = ?"
+        );
+        $stmt->execute([$username]);
+
+        if ($stmt->fetch()) {
+            http_response_code(409);
+            echo json_encode([
+                "success" => false,
+                "message" => "Ez a felhasználónév már foglalt."
+            ]);
+            exit;
+        }
+
+        // Register new user
+        // $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $hashedPassword = $password;
+
+        $stmt = $pdo->prepare(
+            "INSERT INTO users (username, password) VALUES (?, ?)"
+        );
+        $stmt->execute([$username, $hashedPassword]);
+
+        echo json_encode([
+            "success" => true,
+            "message" => "Sikeres regisztráció!"
+        ]);
+        exit;
+    }
+
     // Felhasználó keresése
     $stmt = $pdo->prepare(
-        "SELECT id, felhasznalonev, jelszo
-         FROM felhasznalok
-         WHERE felhasznalonev = ?"
+        "SELECT username, password
+         FROM users
+         WHERE username = ?"
     );
 
     $stmt->execute([$username]);
@@ -52,7 +87,8 @@ try {
     $user = $stmt->fetch();
 
     // Jelszó ellenőrzése
-    if (!$user || !password_verify($password, $user["jelszo"])) {
+    // if (!$user || !password_verify($password, $user["jelszo"])) {
+    if (!$user || $password != $user["password"]) {
         http_response_code(401);
         echo json_encode([
             "message" => "Your username or your password is invalid. :("
@@ -66,21 +102,21 @@ try {
     // Session fixation elleni védelem
     session_regenerate_id(true);
 
-    $_SESSION["user_id"] = $user["id"];
-    $_SESSION["username"] = $user["felhasznalonev"];
+    $_SESSION["username"] = $user["username"];
 
     // Sikeres bejelentkezés
     echo json_encode([
         "success" => true,
         "message" => "Successful login!",
-        "redirectUrl" => "mainScreen"
+        "redirectUrl" => "mainScreen",
+        "ok" => true
     ]);
 
 } catch (PDOException $e) {
     http_response_code(500);
 
     echo json_encode([
-        "message" => "Database error."
+        "message" => "Database error. : " . $e->getMessage()
     ]);
 }
 
