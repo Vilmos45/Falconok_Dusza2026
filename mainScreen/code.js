@@ -176,7 +176,6 @@ function parseProgram(code) {
 function forward(n) {
     if (typeof n !== 'number' || !Number.isInteger(n) || n < 0)
         throw new MineRuntimeError('E_BAD_ARG', `...`);
-    console.log("should go forward");
     showOutput("Stepped: " + forwardRobot(n));
 }
 

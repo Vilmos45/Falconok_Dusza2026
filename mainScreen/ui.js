@@ -13,11 +13,19 @@ var mapY;
 function generateTable(x, y, arr, init = false) {
     mapX = x;
     mapY = y;
+    map = Array.from(
+        { length: y },
+        (_, i) => Array.from(
+            { length: x },
+            (_, j) => arr?.[i]?.[j] ?? "."
+        )
+    );
+
     table.replaceChildren();
-    for (let i = 0; i < x; i++) {
+    for (let i = 0; i < y; i++) {
         const row = document.createElement("div");
         row.classList.add("row");
-        for (let j = 0; j < y; j++) {
+        for (let j = 0; j < x; j++) {
             const cell = document.createElement("div");
             cell.classList.add("cell");
             cell.setAttribute("x", j);
@@ -58,8 +66,7 @@ function generateTable(x, y, arr, init = false) {
         }
         table.appendChild(row);
     }
-    console.info("Table set!");
 }
 
 
-generateTable(10, 15, ">", true);
+generateTable(15, 10, [[">"]], true);

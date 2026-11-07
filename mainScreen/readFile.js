@@ -47,7 +47,7 @@ function parseMap(content) {
         throw new Error("Invalid map dimensions!");
     }
 
-    const [width, height] = dimensions.map(Number);
+    const [height, width] = dimensions.map(Number);
 
     if (width < 1 || height < 1 || width > 15 || height > 15)
         throw new Error("Map size must be between 1x1 and 15x15!");
@@ -76,7 +76,7 @@ function parseMap(content) {
         }
     }
 
-    generateTable(height, width, arr);
+    generateTable(width, height, arr);
 }
 
 
