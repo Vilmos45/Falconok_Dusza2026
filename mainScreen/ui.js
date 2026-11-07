@@ -38,11 +38,9 @@ function generateTable(x, y, arr, init = false) {
                     case '^':
                     case 'v':
                     case '<':
-                        if (init){
-                            robot.x = j;
-                            robot.y = i;
-                            robot.dir = 3;
-                        }
+                        if (init) robot.dir = 0;
+                        robot.x = j;
+                        robot.y = i;
                         cell.classList.add("robot");
                         break;
                     case '.':
