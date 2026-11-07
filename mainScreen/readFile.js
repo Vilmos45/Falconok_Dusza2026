@@ -108,7 +108,7 @@ function parseMineScript(content = "") {
 
     console.log("MineScript loaded:", lines);
     document.getElementById("codeInput").value = lines;
-    document.getElementById("terminal").textContent += "\nfile loaded:\n" + lines;
+    document.getElementById("terminal").textContent += "\n file loaded:\n" + lines;
 }
 
 function loadFile(file) {

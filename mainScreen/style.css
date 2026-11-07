@@ -35,6 +35,8 @@ body{
     flex-shrink: 0;
     font-family: monospace;
     align-content: center;
+    text-align: center;
+    font-size: 3vh;
     overflow: hidden;
 }
 
@@ -49,9 +51,21 @@ body{
     border-radius: 10px;
     padding-left: 5px;
     padding-top: 5px;
-    width: 20vw;
+    width: 25vw;
     height: 40vh;
     margin-bottom: 0.5vh;
+}
+
+#terminal{
+    background-color: black;
+    color: rgb(45, 255, 45);
+    border-radius: 10px;
+    padding-left: 5px;
+    padding-top: 5px;
+    border-style: groove;
+    width: 25vw;
+    height: 10vh;
+    margin-bottom: 1vh;
 }
 
 #startTheCodeButton {
@@ -80,17 +94,6 @@ body{
   margin-top: 11vh;
 }
 
-#terminal{
-    background-color: black;
-    color: rgb(45, 255, 45);
-    border-radius: 10px;
-    padding-left: 5px;
-    padding-top: 5px;
-    border-style: groove;
-    width: 20vw;
-    height: 10vh;
-    margin-bottom: 1vh;
-}
 #mapChangeButton{
     display: flex;
     flex-direction: column;
