@@ -1,7 +1,18 @@
-export {generateTable};
+export {generateTable, map, robot, mapX, mapY};
 const table = document.getElementById("table");
 
-function generateTable(x, y, arr) {
+var map = [[]];
+const robot = {
+    x: 0,
+    y: 0,
+    dir: 1
+};
+var mapX;
+var mapY;
+
+function generateTable(x, y, arr, init = false) {
+    mapX = x;
+    mapY = y;
     table.replaceChildren();
     for (let i = 0; i < x; i++) {
         const row = document.createElement("div");
@@ -11,7 +22,37 @@ function generateTable(x, y, arr) {
             cell.classList.add("cell");
             cell.setAttribute("x", j);
             cell.setAttribute("y", i);
-            if (arr?.[i]?.[j] !== undefined) cell.textContent = arr[i][j];
+            if (arr?.[i]?.[j] !== undefined){
+                cell.textContent = arr[i][j];
+                map[i][j] = arr[i][j];
+                switch(arr[i][j]){
+                    case '>':
+                    case '^':
+                    case 'v':
+                    case '<':
+                        if (init){
+                            robot.x = j;
+                            robot.y = i;
+                            robot.dir = 3;
+                        }
+                        cell.classList.add("robot");
+                        break;
+                    case '.':
+                        cell.classList.add("emptyCell");
+                        break;
+                    case '#':
+                        cell.classList.add("bedrock");
+                        break;
+                    case '@':
+                        cell.classList.add("gold");
+                        break;
+                    default:
+                        break;
+                }
+            }else{
+                cell.textContent = ".";
+                cell.classList.add("emptyCell");
+            }
             cell.addEventListener("click",() => {cell.contentEditable = "true"; });
             row.appendChild(cell);
         }
@@ -20,23 +61,5 @@ function generateTable(x, y, arr) {
     console.info("Table set!");
 }
 
-function getTableContent() {
-    let arr = [[]];
-    for (let i = 0; i < x; i++) {
-        const row = document.createElement("div");
-        row.classList.add("row");
-        for (let j = 0; j < y; j++) {
-            const cell = document.createElement("div");
-            cell.classList.add("cell");
-            cell.setAttribute("x", j);
-            cell.setAttribute("y", i);
-            if (arr?.[i]?.[j] !== undefined) cell.textContent = arr[i][j];
-            cell.addEventListener("click",() => {cell.contentEditable = "true"; });
-            row.appendChild(cell);
-        }
-        table.appendChild(row);
-    }
-}
 
-
-generateTable(10, 15, "");
+generateTable(10, 15, ">", true);

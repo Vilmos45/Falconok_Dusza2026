@@ -1,4 +1,7 @@
-import { forward, turn, mine } from "./robot";
+import { forwardRobot, turnRobot, mineRobot, isThere} from "./robot.js";
+
+const codeInput = document.getElementById("codeInput");
+const startTheCodeButton = document.getElementById("startTheCodeButton");
 
 const KEYWORDS = new Set([
     "and","by","else","false","forward","here","if",
@@ -170,6 +173,27 @@ function parseProgram(code) {
 }
 
 
+function forward(n) {
+    if (typeof n !== 'number' || !Number.isInteger(n) || n < 0)
+        throw new MineRuntimeError('E_BAD_ARG', `...`);
+    console.log("should go forward");
+    showOutput("Stepped: " + forwardRobot(n));
+}
+
+function turn(n) {
+    if (typeof n !== 'number' || !Number.isInteger(n) || n < 0)
+        throw new MineRuntimeError('E_BAD_ARG', `...`);
+    turnRobot(n);
+}
+
+let gold = 0;
+
+function mine() {
+    if (this._cellAt(this.x, this.y) !== 2)
+        throw new MineRuntimeError('E_NO_GOLD', `...`);
+    if (mineRobot()) gold++;
+}
+
 class Interpreter {
     constructor(outputFn) {
         this.variables = new Map();
@@ -195,10 +219,10 @@ class Interpreter {
                 this.setVariable(stmt.name, v);
                 break;
             }
-            case 'step':  forward(this.evaluateSimpleVal(stmt.arg), x, y); break;
-            case 'turn':  turn(this.evaluateSimpleVal(stmt.arg), x, y);    break;
-            case 'mine':  mine(x, y);                                    break;
-            case 'print': this.outputFn(this.evaluateSimpleVal(stmt.arg));      break;
+            case 'step':  forward(this.evaluateSimpleVal(stmt.arg)); break;
+            case 'turn':  turn(this.evaluateSimpleVal(stmt.arg));    break;
+            case 'mine':  mine();                                    break;
+            case 'print': this.outputFn(this.evaluateSimpleVal(stmt.arg));  break;
             case 'if': {
                 const c = this.evaluateSimpleVal(stmt.cond);
                 if (typeof c !== 'boolean')
@@ -247,7 +271,7 @@ class Interpreter {
                 const w = this.evaluateSimpleVal(expr.arg);
                 if (typeof w !== 'number')
                     throw new MineRuntimeError('E_BAD_ARG', `Az isThere paramétere szám kell legyen (${typeof w}).`);
-                return this.robot.isThere(w);
+                return isThere(w);
             }
             case 'unop': {
                 const o = this.evaluateSimpleVal(expr.operand);
@@ -280,13 +304,6 @@ class Interpreter {
     }
 }
 
-
-const codeInput = document.getElementById("codeInput");
-const startTheCodeButton = document.getElementById("startTheCodeButton");
-
-
-const DEFAULT_MAP   = [[0,0,2,0,2,0,2,0,1]];
-const DEFAULT_START = { x:0, y:0, dir:1 };
 
 const DEFAULT_PROGRAM = `set count to 0
 set fal to isThere 1

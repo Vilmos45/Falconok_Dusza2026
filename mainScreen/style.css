@@ -33,6 +33,7 @@ body{
     background-color: rgb(192, 172, 172);
     flex-shrink: 0;
     font-family: monospace;
+    align-content: center;
     overflow: hidden;
 }
 
