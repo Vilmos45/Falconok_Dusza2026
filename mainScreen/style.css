@@ -17,7 +17,8 @@ body{
     margin-top: 1vw;
 }
 
-#fileInput{
+#mapInput{
+    margin-top: 1vh;
     margin-left: 5vw;
 }
 
@@ -41,6 +42,7 @@ body{
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: rgb(45, 255, 45);
 }
+
 #codeInput{
     background-color: black;
     color: rgb(45, 255, 45);
@@ -49,8 +51,11 @@ body{
     padding-top: 5px;
     width: 20vw;
     height: 40vh;
+    margin-bottom: 0.5vh;
 }
+
 #startTheCodeButton {
+    margin-top: 1vh;
     background-color: greenyellow;
     color: green;
     font-size: 1rem;
@@ -72,7 +77,7 @@ body{
 
 #codingSide {
   margin-left: 13vw;
-  margin-top: 17vh;
+  margin-top: 11vh;
 }
 
 #terminal{
@@ -81,9 +86,10 @@ body{
     border-radius: 10px;
     padding-left: 5px;
     padding-top: 5px;
-
+    border-style: groove;
     width: 20vw;
     height: 10vh;
+    margin-bottom: 1vh;
 }
 #mapChangeButton{
     display: flex;
