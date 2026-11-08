@@ -1,7 +1,7 @@
 import { generateTable } from "./ui.js";
 
 const table = document.getElementById("table");
-// const mapInput = document.getElementById("mapInput");
+const mapInput = document.getElementById("mapInput");
 const codeInput = document.getElementById("codeInput")
 
 const allowedExtensions = ["txt", "map", "csv", "tsv", "ms", "minescript"];
@@ -41,7 +41,7 @@ codeInput.addEventListener("drop", e => {
 });
 
 
-/*
+
 // File picker
 mapInput.addEventListener("change", e => {
     if (e.target.files[0])
@@ -49,7 +49,7 @@ mapInput.addEventListener("change", e => {
 
     mapInput.value = "";
 });
-*/
+
 
 function parseMap(content) {
     const lines = content

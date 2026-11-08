@@ -44,6 +44,8 @@ document.getElementById("palyaBetoltesMegerosit").addEventListener("click", asyn
             return;
         }
 
+        console.log("Megérkezett a pálya, csak be kell tölteni. ", data.filename, data.content);
+
         document.dispatchEvent(new CustomEvent("mapLoaded", {
             detail: {
                 filename: data.filename,
