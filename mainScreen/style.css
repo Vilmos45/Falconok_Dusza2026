@@ -158,6 +158,10 @@ main {
     overflow: hidden;
 }
 
+.emptyCell{
+    
+}
+
 #codeTitle{
     margin-top: 1vh;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;

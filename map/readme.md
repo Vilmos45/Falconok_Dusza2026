@@ -1,0 +1,1 @@
+Ez a rész fog felelni a térképek szerkesztéséért
