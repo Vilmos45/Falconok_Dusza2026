@@ -16,13 +16,47 @@ if(!isset($_SESSION["username"])){
     <script type="module" src="readFile.js" defer></script>
     <script type="module" src="robot.js" defer></script>
     <link rel="stylesheet" href="style.css">
-    <title>Miner script</title>
+    <title>Falcons' Miner script</title>
     <script type="module" src="code.js" defer></script>
+    <script type="module" src="code_fejlec.js" defer></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
         <span>Írányítsd a robotot Miner Script kóddal!</span>
+
+        <div id="palyaBetoltesContainer">
+            <button id="palyaBetoltesButton">
+                Pálya betöltése
+            </button>
+
+            <dialog id="palyaDialog">
+                <h2>Pálya kiválasztása</h2>
+
+                <select id="palyaSelect">
+                    <option value="">Válassz egy pályát!</option>
+
+                    <?php
+                    $palyak = glob(__DIR__ . "/../palyak/*.map");
+
+                    foreach ($palyak as $palya) {
+                        $nev = basename($palya);
+
+                        echo '<option value="' .
+                            htmlspecialchars($nev, ENT_QUOTES, 'UTF-8') .
+                            '">' .
+                            htmlspecialchars($nev, ENT_QUOTES, 'UTF-8') .
+                            '</option>';
+                    }
+                    ?>
+                </select>
+
+                <div id="palyaDialogButtons">
+                    <button id="palyaBetoltesMegse">Mégse</button>
+                    <button id="palyaBetoltesMegerosit">Betöltés</button>
+                </div>
+            </dialog>
+        </div>
 
         <div id="profileContainer">
             <button id="profil" title="kijelentkezés">
