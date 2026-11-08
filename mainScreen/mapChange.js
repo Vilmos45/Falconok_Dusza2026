@@ -10,7 +10,7 @@ const importBtn = document.getElementById("importBtn");
 const exportBtn = document.getElementById("exportBtn");
 const uploadBtn = document.getElementById("uploadBtn");
 
-let isEditing = false;
+var isEditing = false;
 let selectedTool = ".";
 
 toggleBtn.onclick = () => {
