@@ -62,6 +62,6 @@ function isThere() {
     const [dy, dx] = directions[robot.dir];
 
     return identify(robot.y + dy, robot.x + dx);
-}
+}   
 
 console.log("robot.js loaded");

@@ -1,0 +1,114 @@
+import { map, mapX, mapY, generateTable } from "./ui.js";
+
+const toggleBtn = document.getElementById("mapChangeButton");
+const editorTools = document.getElementById("editorTools");
+const palette = document.getElementById("palette");
+const mapXInput = document.getElementById("mapXInput");
+const mapYInput = document.getElementById("mapYInput");
+const fileInput = document.getElementById("fileInput");
+const importBtn = document.getElementById("importBtn");
+const exportBtn = document.getElementById("exportBtn");
+
+let isEditing = false;
+let selectedTool = ".";
+
+toggleBtn.onclick = () => {
+    isEditing = !isEditing;
+    editorTools.classList.toggle("hidden", !isEditing);
+    palette.classList.toggle("hidden", !isEditing);
+    toggleBtn.textContent = isEditing ? "mentés / bezárás" : "térkép szerkesztés";
+};
+
+let robotRotationIndex = 1; 
+const rotations = [">", "^", "<", "v"];
+
+palette.querySelectorAll("button").forEach(btn => {
+    btn.onclick = () => {
+        palette.querySelectorAll("button").forEach(b => b.style.border = "1px solid rgb(45, 255, 45)");
+        btn.style.border = "2px solid white";
+        
+        selectedTool = btn.getAttribute("data-type");
+        
+        if (selectedTool === "robot") {
+            robotRotationIndex = (robotRotationIndex + 1) % 4;
+            btn.textContent = rotations[robotRotationIndex];
+            selectedTool = btn.textContent;
+        }
+    };
+});
+
+window.addEventListener("cellClicked", (e) => {
+    if (!isEditing) return;
+    const { x, y } = e.detail;
+
+    if ([">", "<", "^", "v"].includes(selectedTool)) {
+        if (map[y][x] === "@") return;
+        for (let i = 0; i < mapY; i++) {
+            for (let j = 0; j < mapX; j++) {
+                if ("> < ^ v".includes(map[i][j])) map[i][j] = ".";
+            }
+        }
+        map[y][x] = selectedTool;
+    } else {
+        map[y][x] = selectedTool;
+    }
+    generateTable(mapX, mapY, map, false);
+});
+
+mapXInput.onchange = mapYInput.onchange = () => {
+    let newX = parseInt(mapXInput.value) || 10;
+    let newY = parseInt(mapYInput.value) || 15;
+    if (newX < 1) newX = 1; if (newX > 15) newX = 15;
+    if (newY < 1) newY = 1; if (newY > 15) newY = 15;
+    
+    let newMap = [];
+    for (let y = 0; y < newY; y++) {
+        newMap.push([]);
+        for (let x = 0; x < newX; x++) {
+            newMap[y].push(map[y]?.[x] || ".");
+        }
+    }
+    generateTable(newX, newY, newMap, false);
+};
+
+importBtn.onclick = () => fileInput.click();
+fileInput.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        const lines = event.target.result.trim().split("\n");
+        const [h, w] = lines[0].split(" ").map(Number);
+        
+        mapXInput.value = w;
+        mapYInput.value = h;
+        
+        let newMap = [];
+        for (let y = 0; y < h; y++) {
+            newMap.push(lines[y + 1].split(""));
+        }
+        generateTable(w, h, newMap, true); 
+    };
+    reader.readAsText(file);
+    fileInput.value = "";
+};
+
+exportBtn.onclick = () => {
+    let currentX = parseInt(mapXInput.value);
+    let currentY = parseInt(mapYInput.value);
+    
+    let text = `${currentY} ${currentX}\n`;
+    for (let y = 0; y < currentY; y++) {
+        let rowString = "";
+        for (let x = 0; x < currentX; x++) {
+            rowString += map[y]?.[x] || ".";
+        }
+        text += rowString + "\n";
+    }
+    
+    const blob = new Blob([text], { type: "text/plain" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "terkep.txt";
+    a.click();
+};

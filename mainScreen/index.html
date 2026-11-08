@@ -3,21 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="module" src="ui.js"  defer></script>
+    <title>Miner script</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <script type="module" src="ui.js" defer></script>
     <script type="module" src="readFile.js" defer></script>
     <script type="module" src="robot.js" defer></script>
-    <link rel="stylesheet" href="style.css">
-    <title>Miner script</title>
     <script type="module" src="code.js" defer></script>
-    <link rel="stylesheet" href="style.css">
+    <script type="module" src="mapChange.js" defer></script>
 </head>
 <body>
     <div id="parentDiv">
         <div id="map">
+        <div id="topBar">
             <button id="mapChangeButton">térkép szerkesztés</button>
-            <div id="table"></div>
-            <input type="file" id="fileInput" accept=".txt,.map,.csv,.tsv,.ms,.minescript">
+
+            <div id="editorTools" class="hidden">
+                <button id="importBtn">import</button>
+                <input type="file" id="fileInput" accept=".txt" style="display: none;">
+                <button id="exportBtn">export</button>
+                
+                <span id="sizeInputs">
+                    x <input type="number" id="mapXInput" value="10" min="1" max="15">
+                    y <input type="number" id="mapYInput" value="15" min="1" max="15">
+                </span>
+            </div>
         </div>
+
+        <div id="table"></div>
+
+        <div id="palette" class="hidden">
+            <button data-type=".">.</button>
+            <button data-type="#">#</button>
+            <button data-type="@">@</button>
+            <button data-type="robot">></button>
+        </div>
+    </div>
+
         <div id="codingSide">
             <h2 id="codeTitle">Code</h2>
             <div id="terminal">></div>
