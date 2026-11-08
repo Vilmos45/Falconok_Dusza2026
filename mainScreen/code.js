@@ -200,11 +200,12 @@ const runSpeed = 250;
 
 let gold = 0;
 
+/*
 function mine() {
     if (this._cellAt(this.x, this.y) !== 2)
         throw new MineRuntimeError('E_NO_GOLD', `...`);
     if (mineRobot()) gold++;
-}
+}*/
 function mine() {
     if (!mineRobot()) throw new MineRuntimeError('E_NO_GOLD', 'Nincs arany ezen a mezőn.');
     gold++;
@@ -381,7 +382,8 @@ while megy
         set megy to not fal
 print count`;
 
-if (codeInput && !codeInput.value) codeInput.value = DEFAULT_PROGRAM;
+// if (codeInput && !codeInput.value) 
+    codeInput.value = DEFAULT_PROGRAM;
 
 function showOutput(msg) {
     if (terminal) terminal.textContent += msg + "\n";
