@@ -1,4 +1,6 @@
 import { forwardRobot, turnRobot, mineRobot, isThere} from "./robot.js";
+import { generateTable, mapX, mapY } from "./ui.js";
+import { betoltott_palya } from "./szerverrol_palya.js";
 
 const codeInput = document.getElementById("codeInput");
 const startTheCodeButton = document.getElementById("startTheCodeButton");
@@ -203,6 +205,10 @@ function mine() {
         throw new MineRuntimeError('E_NO_GOLD', `...`);
     if (mineRobot()) gold++;
 }
+function mine() {
+    if (!mineRobot()) throw new MineRuntimeError('E_NO_GOLD', 'Nincs arany ezen a mezőn.');
+    gold++;
+}
 
 class Interpreter {
     constructor(outputFn) {
@@ -404,30 +410,34 @@ function highlightLine(lineNum) {
     highlightLayer.scrollLeft = codeInput.scrollLeft;
 }
 
-if (startTheCodeButton) {
-    startTheCodeButton.addEventListener("click", async () => {
-        clearOutput();
-        if (!codeInput) return;
+let steps = 0;
 
-        let program;
-        try {
-            program = parseProgram(codeInput.value);
-        } catch (e) {
-            if (e instanceof MineSyntaxError) {
-                showOutput(e.message);
-                highlightLine(e.lineNum);
-            } else showOutput("\nVáratlan hiba: " + e.message);
-            return;
-        }
+startTheCodeButton.addEventListener("click", async () => {
+    clearOutput();
+    if (!codeInput) return;
 
-        const interp = new Interpreter(v => showOutput(String(v)));
-        try {
-            await interp.run(program);
-            showOutput(`\n--- Futás vége. Utasítások: ${interp.instructionCount} ---`);
-        } catch (e) {
-            if (e instanceof MineRuntimeError) showOutput("Futásidejű hiba: " + e.message);
-            else showOutput("Váratlan hiba: " + e.message);
-        }
-    });
-}
+    gold = 0;
+    steps = 0;
+    generateTable(mapX, mapY, betoltott_palya);
+
+    let program;
+    try {
+        program = parseProgram(codeInput.value);
+    } catch (e) {
+        if (e instanceof MineSyntaxError) {
+            showOutput(e.message);
+            highlightLine(e.lineNum);
+        } else showOutput("\nVáratlan hiba: " + e.message);
+        return;
+    }
+
+    const interp = new Interpreter(v => showOutput(String(v)));
+    try {
+        await interp.run(program);
+        showOutput(`\n--- Futás vége. Utasítások: ${interp.instructionCount} ---`);
+    } catch (e) {
+        if (e instanceof MineRuntimeError) showOutput("Futásidejű hiba: " + e.message);
+        else showOutput("Váratlan hiba: " + e.message);
+    }
+});
 

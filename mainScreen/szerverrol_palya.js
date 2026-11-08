@@ -2,13 +2,7 @@
 
 import { isEditing } from "./mapChange.js";
 
-/*
-export let betoltott_palya = {
-    x: 15,
-    y: 10,
-    content: ">..............\n...............\n...............\n...............\n...............\n...............\n...............\n...............\n...............\n..............."
-};
-*/
+export let betoltott_palya = ">..............\n...............\n...............\n...............\n...............\n...............\n...............\n...............\n...............\n...............";
 
 const palyaDialog = document.getElementById("palyaDialog");
 const palyaSelect = document.getElementById("palyaSelect");
@@ -59,8 +53,8 @@ document.getElementById("palyaBetoltesMegerosit").addEventListener("click", asyn
 
         betoltott_palya.x = x;
         betoltott_palya.y = y;
-        betoltott_palya.content = data.content;
         */
+        betoltott_palya = data.content.split('\n').slice(1).join('\n');
 
         document.dispatchEvent(new CustomEvent("mapLoaded", {
             detail: {
