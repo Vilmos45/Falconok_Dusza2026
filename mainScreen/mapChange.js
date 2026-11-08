@@ -1,4 +1,5 @@
 import { map, mapX, mapY, generateTable } from "./ui.js";
+// import { betoltott_palya } from "./szerverrol_palya.js";
 
 const toggleBtn = document.getElementById("mapChangeButton");
 const editorTools = document.getElementById("editorTools");
@@ -18,6 +19,10 @@ toggleBtn.onclick = () => {
     editorTools.classList.toggle("hidden", !isEditing);
     palette.classList.toggle("hidden", !isEditing);
     toggleBtn.textContent = isEditing ? "<< Vissza" : "térkép szerkesztés";
+    if(isEditing){
+        mapXInput.value = mapX;
+        mapYInput.value = mapY;
+    }
 };
 
 let robotRotationIndex = 1; 

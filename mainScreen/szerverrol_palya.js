@@ -2,6 +2,14 @@
 
 import { isEditing } from "./mapChange.js";
 
+/*
+export let betoltott_palya = {
+    x: 15,
+    y: 10,
+    content: ">..............\n...............\n...............\n...............\n...............\n...............\n...............\n...............\n...............\n..............."
+};
+*/
+
 const palyaDialog = document.getElementById("palyaDialog");
 const palyaSelect = document.getElementById("palyaSelect");
 
@@ -44,7 +52,15 @@ document.getElementById("palyaBetoltesMegerosit").addEventListener("click", asyn
             return;
         }
 
-        console.log("Megérkezett a pálya, csak be kell tölteni. ", data.filename, data.content);
+        console.log("Megérkezett a pálya, csak be kell tölteni.", data.filename, data.content);
+
+        /*
+        const [y, x] = data.content.split("\n")[0].trim().split(/\s+/).map(Number);
+
+        betoltott_palya.x = x;
+        betoltott_palya.y = y;
+        betoltott_palya.content = data.content;
+        */
 
         document.dispatchEvent(new CustomEvent("mapLoaded", {
             detail: {
