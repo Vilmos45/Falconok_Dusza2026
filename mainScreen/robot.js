@@ -27,14 +27,23 @@ function turnRobot(cnt) {
     generateTable(mapX, mapY, map);
 }
 
-function identify(y, x) {
+function identify(y, x, num = false) {
     const cell = map[y]?.[x];
 
-    switch (cell) {
-        case ".": return "empty";
-        case "#": return "bedrock";
-        case "@": return "gold";
-        default: return "unidentified matter";
+    if(num){
+        switch (cell) {
+            case ".": return 0;
+            case "#": return 1;
+            case "@": return 2;
+            default: return -1;
+        }
+    }else{
+        switch (cell) {
+            case ".": return "empty";
+            case "#": return "bedrock";
+            case "@": return "gold";
+            default: return "unidentified matter";
+        }
     }
 }
 
@@ -59,5 +68,5 @@ function mineRobot() {
 function isThere() {
     const [dy, dx] = directions[robot.dir];
 
-    return identify(robot.y + dy, robot.x + dx);
+    return identify(robot.y + dy, robot.x + dx, true);
 }   
