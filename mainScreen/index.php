@@ -14,9 +14,10 @@ if(!isset($_SESSION["username"])){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="module" src="ui.js"  defer></script>
     <script type="module" src="readFile.js" defer></script>
+    <script type="module" src="robot.js" defer></script>
     <link rel="stylesheet" href="style.css">
     <title>Miner script</title>
-    <script src="code.js" defer></script>
+    <script type="module" src="code.js" defer></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -40,13 +41,19 @@ if(!isset($_SESSION["username"])){
     <main>
         <div id="parentDiv">
             <div id="map">
+                <button id="mapChangeButton">térkép szerkesztés</button>
                 <div id="table"></div>
-                <input type="file" id="fileInput" accept=".txt,.map,.csv">
+                <input type="file" id="mapInput" accept=".txt,.map,.csv,.tsv">
             </div>
             <div id="codingSide">
                 <h2 id="codeTitle">Code</h2>
                 <div id="terminal">></div>
-                <textarea id="codeInput" spellcheck="false" placeholder="set arany to isThere 2&#10;print arany"></textarea> <br>
+                <div id="editor">
+                    <div id="highlightLayer"></div>
+                    <textarea id="codeInput" spellcheck="false" placeholder="set arany to isThere 2&#10;print arany"></textarea>
+                </div>
+                <input type="file" id="codeFileInp" accept=".txt,.ms,.minescript">
+                <br>
                 <button id="startTheCodeButton" class="btn btn-primary">Start</button>
             </div>
         </div>

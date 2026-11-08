@@ -1,4 +1,7 @@
-import { forward, turn, mine } from "./robot";
+import { forwardRobot, turnRobot, mineRobot, isThere} from "./robot.js";
+
+const codeInput = document.getElementById("codeInput");
+const startTheCodeButton = document.getElementById("startTheCodeButton");
 
 const KEYWORDS = new Set([
     "and","by","else","false","forward","here","if",
@@ -11,6 +14,11 @@ const COMPARE_OPS = new Set(["<","<=",">",">="]);
 const EQUALITY_OPS = new Set(["=","<>"]);
 const LOGIC_OPS   = new Set(["and","or"]);
 const terminal = document.getElementById("terminal");
+
+codeInput.addEventListener("scroll", () => {
+    highlightLayer.scrollTop = codeInput.scrollTop;
+    highlightLayer.scrollLeft = codeInput.scrollLeft;
+});
 
 
 class MineSyntaxError extends Error {
@@ -170,6 +178,32 @@ function parseProgram(code) {
 }
 
 
+function forward(n) {
+    if (typeof n !== 'number' || !Number.isInteger(n) || n < 0)
+        throw new MineRuntimeError('E_BAD_ARG', `...`);
+    if (!forwardRobot(n)) throw new MineRuntimeError("You can't go there", "out of bounds, or woudl hit a wall");
+}
+
+function turn(n) {
+    if (typeof n !== 'number' || !Number.isInteger(n) || n < 0)
+        throw new MineRuntimeError('E_BAD_ARG', `...`);
+    turnRobot(n);
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+const runSpeed = 250;
+
+let gold = 0;
+
+function mine() {
+    if (this._cellAt(this.x, this.y) !== 2)
+        throw new MineRuntimeError('E_NO_GOLD', `...`);
+    if (mineRobot()) gold++;
+}
+
 class Interpreter {
     constructor(outputFn) {
         this.variables = new Map();
@@ -182,40 +216,85 @@ class Interpreter {
             throw new MineRuntimeError('E_INSTRUCTION_LIMIT', 'Túl sok utasítás (végtelen ciklus?).');
     }
     async run(program) {
-        this.variables.clear(); this.instructionCount = 0;
+        this.variables.clear();
+        this.instructionCount = 0;
         await this.executeBlock(program);
     }
-    async executeBlock(stmts) { for (const s of stmts) await this.executeStatement(s); }
+
+    async executeBlock(stmts) {
+        for (const s of stmts) {
+            await this.executeStatement(s);
+        }
+    }
 
     async executeStatement(stmt) {
         this._count();
+
+        // Aktuális forrássor kiemelése
+        highlightLine(stmt.lineNum);
+
         switch (stmt.type) {
             case 'set': {
                 const v = this.evaluateCalculatedVal(stmt.expr);
                 this.setVariable(stmt.name, v);
                 break;
             }
-            case 'step':  forward(this.evaluateSimpleVal(stmt.arg), x, y); break;
-            case 'turn':  turn(this.evaluateSimpleVal(stmt.arg), x, y);    break;
-            case 'mine':  mine(x, y);                                    break;
-            case 'print': this.outputFn(this.evaluateSimpleVal(stmt.arg));      break;
+
+            case 'step':
+                forward(this.evaluateSimpleVal(stmt.arg));
+                await sleep(runSpeed);
+                break;
+
+            case 'turn':
+                turn(this.evaluateSimpleVal(stmt.arg));
+                await sleep(runSpeed);
+                break;
+
+            case 'mine':
+                mine();
+                await sleep(runSpeed);
+                break;
+
+            case 'print':
+                this.outputFn(this.evaluateSimpleVal(stmt.arg));
+                break;
+
             case 'if': {
                 const c = this.evaluateSimpleVal(stmt.cond);
+
                 if (typeof c !== 'boolean')
-                    throw new MineRuntimeError('E_NON_BOOL_CONDITION', `Az if feltétele nem logikai érték (${typeof c}).`);
-                if (c) await this.executeBlock(stmt.thenBlock);
-                else if (stmt.elseBlock) await this.executeBlock(stmt.elseBlock);
+                    throw new MineRuntimeError(
+                        'E_NON_BOOL_CONDITION',
+                        `Az if feltétele nem logikai érték (${typeof c}).`
+                    );
+
+                if (c)
+                    await this.executeBlock(stmt.thenBlock);
+                else if (stmt.elseBlock)
+                    await this.executeBlock(stmt.elseBlock);
+
                 break;
             }
+
             case 'while': {
                 while (true) {
                     this._count();
+
+                    highlightLine(stmt.lineNum);
+
                     const c = this.evaluateSimpleVal(stmt.cond);
+
                     if (typeof c !== 'boolean')
-                        throw new MineRuntimeError('E_NON_BOOL_CONDITION', `A while feltétele nem logikai érték (${typeof c}).`);
+                        throw new MineRuntimeError(
+                            'E_NON_BOOL_CONDITION',
+                            `A while feltétele nem logikai érték (${typeof c}).`
+                        );
+
                     if (!c) break;
+
                     await this.executeBlock(stmt.body);
                 }
+
                 break;
             }
         }
@@ -247,7 +326,7 @@ class Interpreter {
                 const w = this.evaluateSimpleVal(expr.arg);
                 if (typeof w !== 'number')
                     throw new MineRuntimeError('E_BAD_ARG', `Az isThere paramétere szám kell legyen (${typeof w}).`);
-                return this.robot.isThere(w);
+                return isThere(w);
             }
             case 'unop': {
                 const o = this.evaluateSimpleVal(expr.operand);
@@ -281,13 +360,6 @@ class Interpreter {
 }
 
 
-const codeInput = document.getElementById("codeInput");
-const startTheCodeButton = document.getElementById("startTheCodeButton");
-
-
-const DEFAULT_MAP   = [[0,0,2,0,2,0,2,0,1]];
-const DEFAULT_START = { x:0, y:0, dir:1 };
-
 const DEFAULT_PROGRAM = `set count to 0
 set fal to isThere 1
 set megy to not fal
@@ -311,14 +383,25 @@ function showOutput(msg) {
 
 function clearOutput() { if (terminal) terminal.textContent = ""; }
 
+const highlightLayer = document.getElementById("highlightLayer");
+
 function highlightLine(lineNum) {
-    if (!codeInput || !lineNum) return;
+    if (!codeInput || !highlightLayer) return;
     const lines = codeInput.value.split(/\r?\n/);
     if (lineNum < 1 || lineNum > lines.length) return;
-    let start = 0;
-    for (let i = 0; i < lineNum - 1; i++) start += lines[i].length + 1;
-    codeInput.focus();
-    codeInput.setSelectionRange(start, start + lines[lineNum - 1].length);
+    highlightLayer.replaceChildren();
+    lines.forEach((line, index) => {
+        const div = document.createElement("div");
+        div.textContent = line || "\u00A0";
+
+        if (index === lineNum - 1)
+            div.classList.add("highlighted-line");
+
+        highlightLayer.appendChild(div);
+    });
+
+    highlightLayer.scrollTop = codeInput.scrollTop;
+    highlightLayer.scrollLeft = codeInput.scrollLeft;
 }
 
 if (startTheCodeButton) {

@@ -1,0 +1,1 @@
+print "loaded example MineScript"
