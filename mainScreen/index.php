@@ -77,11 +77,8 @@ if(!isset($_SESSION["username"])){
     </header>
     <main>
         <div id="parentDiv">
-            <div>
-                <div>Pálya: 0.map</div>
-                <div id="arany">Aranyrögök: 0</div>
-            </div>
             <div id="map">
+                <div id="arany">Aranyrögök: 0</div>
                 <div id="topBar">
                     <button id="mapChangeButton">térkép szerkesztés</button>
 
