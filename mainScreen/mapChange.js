@@ -55,8 +55,10 @@ window.addEventListener("cellClicked", (e) => {
             }
         }
         map[y][x] = selectedTool;
-    } else {
+    } else if(![">", "<", "^", "v"].includes(map[y][x])) {
         map[y][x] = selectedTool;
+    } else{
+        console.log("NE ÖLD MEG A ROBOTOT!");
     }
     generateTable(mapX, mapY, map, false);
 });

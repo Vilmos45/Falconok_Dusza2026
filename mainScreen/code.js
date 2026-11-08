@@ -111,12 +111,12 @@ function parseSingleStatement(line) {
         return { type:'print', arg: parseSimpleVal(tokens[1], lineNum), lineNum };
     }
     if (head === "if") {
-        if (tokens.length !== 2) throw new MineSyntaxError(lineNum, "Az if formája: if <feltétel>.");
-        return { type:'if', cond: parseSimpleVal(tokens[1], lineNum), lineNum };
+        if (tokens.length < 2) throw new MineSyntaxError(lineNum, "Az if formája: if <feltétel>.");
+        return { type:'if', cond: parseCalculatedVal(tokens.slice(1), lineNum), lineNum };
     }
     if (head === "while") {
-        if (tokens.length !== 2) throw new MineSyntaxError(lineNum, "A while formája: while <feltétel>.");
-        return { type:'while', cond: parseSimpleVal(tokens[1], lineNum), lineNum };
+        if (tokens.length < 2) throw new MineSyntaxError(lineNum, "A while formája: while <feltétel>.");
+        return { type:'while', cond: parseCalculatedVal(tokens.slice(1), lineNum), lineNum };
     }
     if (head === "else") throw new MineSyntaxError(lineNum, "A 'else' csak 'if' blokk után állhat.");
     throw new MineSyntaxError(lineNum, `Ismeretlen utasítás: "${head}".`);
@@ -260,7 +260,7 @@ class Interpreter {
                 break;
 
             case 'if': {
-                const c = this.evaluateSimpleVal(stmt.cond);
+                const c = this.evaluateCalculatedVal(stmt.cond);
 
                 if (typeof c !== 'boolean')
                     throw new MineRuntimeError(
@@ -282,7 +282,7 @@ class Interpreter {
 
                     highlightLine(stmt.lineNum);
 
-                    const c = this.evaluateSimpleVal(stmt.cond);
+                    const c = this.evaluateCalculatedVal(stmt.cond);
 
                     if (typeof c !== 'boolean')
                         throw new MineRuntimeError(
