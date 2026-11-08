@@ -25,12 +25,12 @@ if(!isset($_SESSION["username"])){
         <span>Írányítsd a robotot Miner Script kóddal!</span>
 
         <div id="profileContainer">
-            <button id="profil">
+            <button id="profil" title="kijelentkezés">
                 <?= htmlspecialchars($_SESSION["username"]) ?>
             </button>
 
             <div id="profileMenu" class="hidden">
-                <a href="../logout.php">Kijelentkezés</a>
+                <a href="../logout.html">Kijelentkezés</a>
 
                 <!-- <button id="deleteProfile">
                     Profil törlése
