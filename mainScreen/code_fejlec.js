@@ -67,15 +67,12 @@ document.getElementById("palyaBetoltesMegerosit").addEventListener("click", asyn
 
         const data = await response.json();
 
+        
         if (!response.ok || !data.success) {
             alert(data.message || "Hiba történt a pálya betöltésekor!");
             return;
         }
 
-        // A betöltött pálya elérhetővé tétele
-        window.currentMapContent = data.content;
-
-        // Esemény küldése a térképkezelő kódnak - EZ FASZSÁG
         document.dispatchEvent(new CustomEvent("mapLoaded", {
             detail: {
                 filename: data.filename,
@@ -87,7 +84,7 @@ document.getElementById("palyaBetoltesMegerosit").addEventListener("click", asyn
 
         document.getElementById("palyaBetoltesButton").textContent =
             data.filename;
-
+        
     } catch (error) {
         console.error(error);
         alert("Nem sikerült kommunikálni a szerverrel!");

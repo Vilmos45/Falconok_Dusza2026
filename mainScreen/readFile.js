@@ -107,7 +107,7 @@ function parseMineScript(content = "") {
         .split("\n");
 
     console.log("MineScript loaded:", lines);
-    document.getElementById("codeInput").value = lines;
+    document.getElementById("codeInput").value = lines.join("\n"); // BELEMÓDOSÍTVA, EREDETILEG NEM VOLT JOIN
     document.getElementById("terminal").textContent += "\n file loaded:\n" + lines;
 }
 
@@ -142,3 +142,16 @@ function loadFile(file) {
 
     reader.readAsText(file);
 }
+
+
+document.addEventListener("mapLoaded", event => {
+    try {
+        parseMap(event.detail.content);
+
+        console.log("Map loaded:", event.detail.filename);
+
+    } catch (error) {
+        console.error(error);
+        alert(error.message);
+    }
+});
