@@ -420,7 +420,7 @@ startTheCodeButton.addEventListener("click", async () => {
 
     gold = 0;
     steps = 0;
-    generateTable(mapX, mapY, betoltott_palya);
+    // generateTable(mapX, mapY, betoltott_palya);
 
     let program;
     try {
@@ -437,6 +437,7 @@ startTheCodeButton.addEventListener("click", async () => {
     try {
         await interp.run(program);
         showOutput(`\n--- Futás vége. Utasítások: ${interp.instructionCount} ---`);
+        alert("Gratulálok! Az összegyűjtött aranyaid száma: " + gold);
     } catch (e) {
         if (e instanceof MineRuntimeError) showOutput("Futásidejű hiba: " + e.message);
         else showOutput("Váratlan hiba: " + e.message);
