@@ -6,5 +6,5 @@ unset($_SESSION["username"]);
 
 session_write_close();
 
-header("Location: index.html");
+header("Location: /");
 exit;
