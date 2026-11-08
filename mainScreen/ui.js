@@ -9,12 +9,18 @@ var mapY;
 function generateTable(x, y, arr, init = false) {
     mapX = x;
     mapY = y;
+    map = Array.from(
+        { length: y },
+        (_, i) => Array.from(
+            { length: x },
+            (_, j) => arr?.[i]?.[j] ?? "."
+        )
+    );
+
     table.replaceChildren();
-    
     for (let i = 0; i < y; i++) {
         const row = document.createElement("div");
         row.classList.add("row");
-        
         for (let j = 0; j < x; j++) {
             const cell = document.createElement("div");
             cell.classList.add("cell");
@@ -31,14 +37,9 @@ function generateTable(x, y, arr, init = false) {
                     case '^':
                     case 'v':
                     case '<':
-                        if (init){
-                            robot.x = j;
-                            robot.y = i;
-                            if (arr[i][j] === ">") robot.dir = 1;
-                            if (arr[i][j] === "<") robot.dir = 3;
-                            if (arr[i][j] === "^") robot.dir = 0;
-                            if (arr[i][j] === "v") robot.dir = 2;
-                        }
+                        if (init) robot.dir = 0;
+                        robot.x = j;
+                        robot.y = i;
                         cell.classList.add("robot");
                         break;
                     case '.': cell.classList.add("emptyCell"); break;
@@ -61,7 +62,7 @@ function generateTable(x, y, arr, init = false) {
         }
         table.appendChild(row);
     }
-    console.info("Table set!");
 }
 
-generateTable(10, 15, [">"], true);
+
+generateTable(15, 10, [[">"]], true);

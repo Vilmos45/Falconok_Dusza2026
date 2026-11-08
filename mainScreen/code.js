@@ -15,6 +15,11 @@ const EQUALITY_OPS = new Set(["=","<>"]);
 const LOGIC_OPS   = new Set(["and","or"]);
 const terminal = document.getElementById("terminal");
 
+codeInput.addEventListener("scroll", () => {
+    highlightLayer.scrollTop = codeInput.scrollTop;
+    highlightLayer.scrollLeft = codeInput.scrollLeft;
+});
+
 
 class MineSyntaxError extends Error {
     constructor(lineNum, message) {
@@ -176,8 +181,7 @@ function parseProgram(code) {
 function forward(n) {
     if (typeof n !== 'number' || !Number.isInteger(n) || n < 0)
         throw new MineRuntimeError('E_BAD_ARG', `...`);
-    console.log("should go forward");
-    showOutput("Stepped: " + forwardRobot(n));
+    if (!forwardRobot(n)) throw new MineRuntimeError("You can't go there", "out of bounds, or woudl hit a wall");
 }
 
 function turn(n) {
@@ -185,6 +189,12 @@ function turn(n) {
         throw new MineRuntimeError('E_BAD_ARG', `...`);
     turnRobot(n);
 }
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+const runSpeed = 250;
 
 let gold = 0;
 
@@ -206,40 +216,85 @@ class Interpreter {
             throw new MineRuntimeError('E_INSTRUCTION_LIMIT', 'Túl sok utasítás (végtelen ciklus?).');
     }
     async run(program) {
-        this.variables.clear(); this.instructionCount = 0;
+        this.variables.clear();
+        this.instructionCount = 0;
         await this.executeBlock(program);
     }
-    async executeBlock(stmts) { for (const s of stmts) await this.executeStatement(s); }
+
+    async executeBlock(stmts) {
+        for (const s of stmts) {
+            await this.executeStatement(s);
+        }
+    }
 
     async executeStatement(stmt) {
         this._count();
+
+        // Aktuális forrássor kiemelése
+        highlightLine(stmt.lineNum);
+
         switch (stmt.type) {
             case 'set': {
                 const v = this.evaluateCalculatedVal(stmt.expr);
                 this.setVariable(stmt.name, v);
                 break;
             }
-            case 'step':  forward(this.evaluateSimpleVal(stmt.arg)); break;
-            case 'turn':  turn(this.evaluateSimpleVal(stmt.arg));    break;
-            case 'mine':  mine();                                    break;
-            case 'print': this.outputFn(this.evaluateSimpleVal(stmt.arg));  break;
+
+            case 'step':
+                forward(this.evaluateSimpleVal(stmt.arg));
+                await sleep(runSpeed);
+                break;
+
+            case 'turn':
+                turn(this.evaluateSimpleVal(stmt.arg));
+                await sleep(runSpeed);
+                break;
+
+            case 'mine':
+                mine();
+                await sleep(runSpeed);
+                break;
+
+            case 'print':
+                this.outputFn(this.evaluateSimpleVal(stmt.arg));
+                break;
+
             case 'if': {
                 const c = this.evaluateSimpleVal(stmt.cond);
+
                 if (typeof c !== 'boolean')
-                    throw new MineRuntimeError('E_NON_BOOL_CONDITION', `Az if feltétele nem logikai érték (${typeof c}).`);
-                if (c) await this.executeBlock(stmt.thenBlock);
-                else if (stmt.elseBlock) await this.executeBlock(stmt.elseBlock);
+                    throw new MineRuntimeError(
+                        'E_NON_BOOL_CONDITION',
+                        `Az if feltétele nem logikai érték (${typeof c}).`
+                    );
+
+                if (c)
+                    await this.executeBlock(stmt.thenBlock);
+                else if (stmt.elseBlock)
+                    await this.executeBlock(stmt.elseBlock);
+
                 break;
             }
+
             case 'while': {
                 while (true) {
                     this._count();
+
+                    highlightLine(stmt.lineNum);
+
                     const c = this.evaluateSimpleVal(stmt.cond);
+
                     if (typeof c !== 'boolean')
-                        throw new MineRuntimeError('E_NON_BOOL_CONDITION', `A while feltétele nem logikai érték (${typeof c}).`);
+                        throw new MineRuntimeError(
+                            'E_NON_BOOL_CONDITION',
+                            `A while feltétele nem logikai érték (${typeof c}).`
+                        );
+
                     if (!c) break;
+
                     await this.executeBlock(stmt.body);
                 }
+
                 break;
             }
         }
@@ -328,14 +383,25 @@ function showOutput(msg) {
 
 function clearOutput() { if (terminal) terminal.textContent = ""; }
 
+const highlightLayer = document.getElementById("highlightLayer");
+
 function highlightLine(lineNum) {
-    if (!codeInput || !lineNum) return;
+    if (!codeInput || !highlightLayer) return;
     const lines = codeInput.value.split(/\r?\n/);
     if (lineNum < 1 || lineNum > lines.length) return;
-    let start = 0;
-    for (let i = 0; i < lineNum - 1; i++) start += lines[i].length + 1;
-    codeInput.focus();
-    codeInput.setSelectionRange(start, start + lines[lineNum - 1].length);
+    highlightLayer.replaceChildren();
+    lines.forEach((line, index) => {
+        const div = document.createElement("div");
+        div.textContent = line || "\u00A0";
+
+        if (index === lineNum - 1)
+            div.classList.add("highlighted-line");
+
+        highlightLayer.appendChild(div);
+    });
+
+    highlightLayer.scrollTop = codeInput.scrollTop;
+    highlightLayer.scrollLeft = codeInput.scrollLeft;
 }
 
 if (startTheCodeButton) {
@@ -364,3 +430,4 @@ if (startTheCodeButton) {
         }
     });
 }
+

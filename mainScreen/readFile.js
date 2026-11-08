@@ -1,7 +1,8 @@
 import { generateTable } from "./ui.js";
 
 const table = document.getElementById("table");
-const fileInput = document.getElementById("fileInput");
+const mapInput = document.getElementById("mapInput");
+const codeInput = document.getElementById("codeInput")
 
 const allowedExtensions = ["txt", "map", "csv", "tsv", "ms", "minescript"];
 const validCells = [">", "^", "v", "<", ".", "#", "@"];
@@ -23,12 +24,30 @@ table.addEventListener("drop", e => {
     if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
 });
 
+codeInput.addEventListener("dragover", e => {
+    e.preventDefault();
+    codeInput.classList.add("dragover");
+});
+
+codeInput.addEventListener("dragleave", () => {
+    codeInput.classList.remove("dragover");
+});
+
+codeInput.addEventListener("drop", e => {
+    e.preventDefault();
+    codeInput.classList.remove("dragover");
+
+    if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+
+
+
 // File picker
-fileInput.addEventListener("change", e => {
+mapInput.addEventListener("change", e => {
     if (e.target.files[0])
         loadFile(e.target.files[0]);
 
-    fileInput.value = "";
+    mapInput.value = "";
 });
 
 function parseMap(content) {
@@ -47,7 +66,7 @@ function parseMap(content) {
         throw new Error("Invalid map dimensions!");
     }
 
-    const [width, height] = dimensions.map(Number);
+    const [height, width] = dimensions.map(Number);
 
     if (width < 1 || height < 1 || width > 15 || height > 15)
         throw new Error("Map size must be between 1x1 and 15x15!");
@@ -76,7 +95,7 @@ function parseMap(content) {
         }
     }
 
-    generateTable(height, width, arr);
+    generateTable(width, height, arr);
 }
 
 
@@ -88,8 +107,8 @@ function parseMineScript(content = "") {
         .split("\n");
 
     console.log("MineScript loaded:", lines);
-
-    document.getElementById("terminal").textContent = lines;
+    document.getElementById("codeInput").value = lines.join("\n"); // BELEMÓDOSÍTVA, EREDETILEG NEM VOLT JOIN
+    document.getElementById("terminal").textContent += "\n file loaded:\n" + lines;
 }
 
 function loadFile(file) {
@@ -107,8 +126,7 @@ function loadFile(file) {
             const content = e.target.result;
 
             if (["ms", "minescript"].includes(extension)) {
-                const script = parseMineScript(content);
-                console.log("MineScript:", script);
+                parseMineScript(content);
             } else
                 parseMap(content);
 
@@ -124,3 +142,16 @@ function loadFile(file) {
 
     reader.readAsText(file);
 }
+
+
+document.addEventListener("mapLoaded", event => {
+    try {
+        parseMap(event.detail.content);
+
+        console.log("Map loaded:", event.detail.filename);
+
+    } catch (error) {
+        console.error(error);
+        alert(error.message);
+    }
+});
