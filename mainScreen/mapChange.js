@@ -193,15 +193,15 @@ saveMapForm.onsubmit = async (event) => {
             // Pályaválasztó frissítése
             const mapSelect = document.getElementById("palyaSelect");
 
-            if (mapSelect) {
-                let option = document.createElement("option");
-                option.value = name;
-                option.textContent = name;
-                mapSelect.appendChild(option);
-                mapSelect.value = name;
+            let option = document.createElement("option");
+            option.value = name;
+            option.textContent = name;
+            mapSelect.appendChild(option);
+            mapSelect.value = name;
 
-                mapSelect.dispatchEvent(new Event("change"));
-            }
+            mapSelect.dispatchEvent(new Event("change"));
+            
+            document.getElementById("palyaBetoltesButton").textContent = name;
 
             saveMapDialog.close();
             return;

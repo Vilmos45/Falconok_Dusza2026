@@ -19,7 +19,8 @@ if(!isset($_SESSION["username"])){
     <script type="module" src="readFile.js" defer></script>
     <script type="module" src="robot.js" defer></script>
     <script type="module" src="code.js" defer></script>
-    <script type="module" src="code_fejlec.js" defer></script>
+    <script type="module" src="serverrol_palya.js" defer></script>
+    <script type="module" src="profil.js" defer></script>
     <script type="module" src="mapChange.js" defer></script>
 
     <link rel="stylesheet" href="style.css">
