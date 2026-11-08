@@ -79,7 +79,7 @@ if(!isset($_SESSION["username"])){
         <div id="parentDiv">
             <div>
                 <div>Pálya: 0.map</div>
-                <div>Aranyrögök: 0</div>
+                <div id="arany">Aranyrögök: 0</div>
             </div>
             <div id="map">
                 <div id="topBar">
@@ -122,7 +122,7 @@ if(!isset($_SESSION["username"])){
             </div>
             <button type="button" id="ranglistaButton">< Ranglista</button>
             <div id="ranglista">
-
+<br>
             </div>
         </div>
     </main>
