@@ -56,8 +56,15 @@ function mineRobot() {
     return target === "gold";
 }
 
-function isThere() {
+function isThere(w) {
     const [dy, dx] = directions[robot.dir];
+    const targetY = robot.y + dy;
+    const targetX = robot.x + dx;
+    const cell = map[targetY]?.[targetX] || "#";
 
-    return identify(robot.y + dy, robot.x + dx);
-}   
+    if (w === 0) return cell === "."; 
+    if (w === 1) return cell === "#"; 
+    if (w === 2) return cell === "@"; 
+    
+    throw new Error("E_BAD_ARG: Az isThere paramétere 0, 1 vagy 2 kell legyen.");
+}
