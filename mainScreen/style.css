@@ -1,24 +1,70 @@
-body{
-    background-color:rgb(70, 70, 70);
+
+* {
+    box-sizing: border-box;
 }
 
-#parentDiv{
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background-color: rgb(70, 70, 70);
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(1, 1fr);
-    gap: 13px;
+    grid-template-rows: 9vh minmax(0, 1fr) 5vh;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* HEADER */
+
+header {
+    background-color: rgb(35, 35, 35);
+    color: white;
+    padding: 0 3vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 1.3rem;
+    position: relative;
+    z-index: 10;
+}
+
+/* MAIN */
+
+main {
+    min-height: 0;
+    padding: 2vh 2vw;
+}
+
+#parentDiv {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 2vw;
+    height: 100%;
+}
+
+#map {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 #table {
     display: flex;
     flex-direction: column;
     gap: 2px;
-    margin-top: 20vh;
-    margin-left: 5vw;
+    max-width: 100%;
+    overflow: auto;
 }
 
-#fileInput{
-    margin-left: 5vw;
+#fileInput {
+    margin-top: 15px;
+    max-width: 100%;
 }
 
 .row {
@@ -36,51 +82,120 @@ body{
     overflow: hidden;
 }
 
-#codeTitle{
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* CODE EDITOR */
+
+#codingSide {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0 3vw;
+    min-width: 0;
+}
+
+#codeTitle {
+    font-family: 'Segoe UI', sans-serif;
     color: rgb(45, 255, 45);
 }
-#codeInput{
+
+#terminal {
     background-color: black;
     color: rgb(45, 255, 45);
     border-radius: 10px;
-    padding-left: 5px;
-    padding-top: 5px;
-    width: 20vw;
-    height: 40vh;
+    padding: 10px;
+    width: 100%;
+    height: 15vh;
+    overflow-y: auto;
+    margin-bottom: 2vh;
 }
+
+#codeInput {
+    background-color: black;
+    color: rgb(45, 255, 45);
+    border-radius: 10px;
+    padding: 10px;
+    width: 100%;
+    height: 45vh;
+    resize: none;
+    font-family: monospace;
+    font-size: 1rem;
+}
+
 #startTheCodeButton {
     background-color: greenyellow;
     color: green;
     font-size: 1rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
     font-weight: 700;
     border-radius: 10px;
     border: none;
-
-
     padding: 15px 30px;
     min-width: 120px;
     cursor: pointer;
     transition: 0.2s;
+    margin-top: 2vh;
 }
 
 #startTheCodeButton:hover {
     background-color: #9acd32;
 }
 
-#codingSide {
-  margin-left: 13vw;
-  margin-top: 17vh;
+/* FOOTER */
+
+footer {
+    background-color: rgb(35, 35, 35);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 0.85rem;
 }
 
-#terminal{
-    background-color: black;
-    color: rgb(45, 255, 45);
-    border-radius: 10px;
-    padding-left: 5px;
-    padding-top: 5px;
+/* PROFILE MENU */
 
-    width: 20vw;
-    height: 10vh;
+#profileContainer {
+    position: relative;
+}
+
+#profil {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+}
+
+#profileMenu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    background-color: rgb(35, 35, 35);
+    border: 1px solid gray;
+    border-radius: 10px;
+    padding: 12px;
+    min-width: 170px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#profileMenu a,
+#profileMenu button {
+    color: white;
+    background: none;
+    border: none;
+    text-decoration: none;
+    text-align: left;
+    padding: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+#profileMenu a:hover,
+#profileMenu button:hover {
+    background-color: rgb(70, 70, 70);
+}
+
+.hidden {
+    display: none !important;
 }
