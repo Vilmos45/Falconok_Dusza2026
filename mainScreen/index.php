@@ -30,7 +30,7 @@ if(!isset($_SESSION["username"])){
             </button>
 
             <div id="profileMenu" class="hidden">
-                <a href="../logout.html">Kijelentkezés</a>
+                <a href="../logout.php">Kijelentkezés</a>
 
                 <!-- <button id="deleteProfile">
                     Profil törlése
