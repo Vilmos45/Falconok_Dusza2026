@@ -209,6 +209,7 @@ function mine() {
 function mine() {
     if (!mineRobot()) throw new MineRuntimeError('E_NO_GOLD', 'Nincs arany ezen a mezőn.');
     gold++;
+    document.getElementById("arany").textContent = "Aranyrögök: " + gold;
 }
 
 class Interpreter {
@@ -419,6 +420,7 @@ startTheCodeButton.addEventListener("click", async () => {
     if (!codeInput) return;
 
     gold = 0;
+    document.getElementById("arany").textContent = "Aranyrögök: " + gold;
     steps = 0;
     // generateTable(mapX, mapY, betoltott_palya);
 
