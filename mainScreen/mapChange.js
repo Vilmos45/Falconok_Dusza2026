@@ -1,5 +1,4 @@
 import { map, mapX, mapY, generateTable } from "./ui.js";
-// export {isEditing};
 
 const toggleBtn = document.getElementById("mapChangeButton");
 const editorTools = document.getElementById("editorTools");
@@ -11,7 +10,7 @@ const importBtn = document.getElementById("importBtn");
 const exportBtn = document.getElementById("exportBtn");
 const uploadBtn = document.getElementById("uploadBtn");
 
-var isEditing = false;
+export let isEditing = false;
 let selectedTool = ".";
 
 toggleBtn.onclick = () => {
