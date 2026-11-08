@@ -11,14 +11,15 @@ function forwardRobot(cnt = 1) {
     const nx = robot.x + dx * cnt;
     const ny = robot.y + dy * cnt;
 
-    if (ny < 0 || ny >= map.length || nx < 0 || nx >= map[ny].length || map[ny][nx] !== ".") return false;
+    if (ny < 0 || ny >= map.length || nx < 0 || nx >= map[ny].length || map[ny][nx] === "#") {
+        throw new Error("E_BEDROCK_HIT");
+    }
 
     map[robot.y][robot.x] = ".";
     map[ny][nx] = [">", "^", "<", "v"][robot.dir];
 
     console.log("robot at:" + nx + ", " + ny);
     generateTable(mapX, mapY, map);
-    return true;
 }
 
 function turnRobot(cnt) {
@@ -39,10 +40,8 @@ function identify(y, x) {
 }
 
 function mineRobot() {
-    const [dy, dx] = directions[robot.dir];
-
-    const y = robot.y + dy;
-    const x = robot.x + dx;
+    const y = robot.y;
+    const x = robot.x;
     const target = identify(y, x);
 
     if (target === "bedrock" || target === "unidentified matter") {

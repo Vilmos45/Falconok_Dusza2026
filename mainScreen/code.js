@@ -180,8 +180,8 @@ function parseProgram(code) {
 
 function forward(n) {
     if (typeof n !== 'number' || !Number.isInteger(n) || n < 0)
-        throw new MineRuntimeError('E_BAD_ARG', `...`);
-    if (!forwardRobot(n)) throw new MineRuntimeError("You can't go there", "out of bounds, or woudl hit a wall");
+        throw new MineRuntimeError('E_BAD_ARG', `Érvénytelen paraméter: ${n}`);
+    forwardRobot(n);
 }
 
 function turn(n) {
@@ -199,9 +199,7 @@ const runSpeed = 250;
 let gold = 0;
 
 function mine() {
-    if (this._cellAt(this.x, this.y) !== 2)
-        throw new MineRuntimeError('E_NO_GOLD', `...`);
-    if (mineRobot()) gold++;
+    mineRobot();
 }
 
 class Interpreter {
