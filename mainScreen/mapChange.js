@@ -1,5 +1,5 @@
 import { map, mapX, mapY, generateTable } from "./ui.js";
-// import { betoltott_palya } from "./szerverrol_palya.js";
+import { betoltott_palya, set_betoltott_palya } from "./szerverrol_palya.js";
 
 const toggleBtn = document.getElementById("mapChangeButton");
 const editorTools = document.getElementById("editorTools");
@@ -22,6 +22,8 @@ toggleBtn.onclick = () => {
     if(isEditing){
         mapXInput.value = mapX;
         mapYInput.value = mapY;
+    }else{
+        set_betoltott_palya(getMapContent(false));
     }
 };
 
@@ -129,11 +131,11 @@ const mapSaveError = document.getElementById("mapSaveError");
 const cancelMapSave = document.getElementById("cancelMapSave");
 
 // Pálya tartalmának előállítása
-function getMapContent() {
+function getMapContent(xy_nal = true) {
     const currentX = parseInt(mapXInput.value);
     const currentY = parseInt(mapYInput.value);
 
-    let text = `${currentY} ${currentX}\n`;
+    let text = xy_nal ? `${currentY} ${currentX}\n` : "";
 
     for (let y = 0; y < currentY; y++) {
         let rowString = "";

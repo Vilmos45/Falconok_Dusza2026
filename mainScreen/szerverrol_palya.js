@@ -3,6 +3,9 @@
 import { isEditing } from "./mapChange.js";
 
 export let betoltott_palya = ">..............\n...............\n...............\n...............\n...............\n...............\n...............\n...............\n...............\n...............";
+export function set_betoltott_palya(palya){
+    betoltott_palya = palya;
+}
 
 const palyaDialog = document.getElementById("palyaDialog");
 const palyaSelect = document.getElementById("palyaSelect");
