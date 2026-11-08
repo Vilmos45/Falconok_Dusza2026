@@ -117,9 +117,9 @@ if(!isset($_SESSION["username"])){
                 <br>
                 <button id="startTheCodeButton" class="btn btn-primary">Start</button>
             </div>
-            <button type="button" id="ranglistaButton">< Ranglista</button>
-            <div id="ranglista">
-<br>
+            <!-- <button type="button" id="ranglistaButton">< Ranglista</button>
+            <div id="ranglista"> -->
+
             </div>
         </div>
     </main>
