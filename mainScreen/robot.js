@@ -65,8 +65,8 @@ function mineRobot() {
     return target === "gold";
 }
 
-function isThere() {
+function isThere(szam) {
     const [dy, dx] = directions[robot.dir];
 
-    return identify(robot.y + dy, robot.x + dx, true);
+    return szam === identify(robot.y + dy, robot.x + dx, true);
 }   
