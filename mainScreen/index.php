@@ -75,10 +75,31 @@ if(!isset($_SESSION["username"])){
     <main>
         <div id="parentDiv">
             <div id="map">
+            <div id="topBar">
                 <button id="mapChangeButton">térkép szerkesztés</button>
-                <div id="table"></div>
-                <input type="file" id="mapInput" accept=".txt,.map,.csv,.tsv">
+
+                <div id="editorTools" class="hidden">
+                    <button id="importBtn">import</button>
+                    <input type="file" id="fileInput" accept=".txt" style="display: none;">
+                    <button id="exportBtn">export</button>
+                    
+                    <span id="sizeInputs">
+                        x <input type="number" id="mapXInput" value="10" min="1" max="15">
+                        y <input type="number" id="mapYInput" value="15" min="1" max="15">
+                    </span>
+                </div>
             </div>
+
+            <div id="table"></div>
+
+            <div id="palette" class="hidden">
+                <button data-type=".">.</button>
+                <button data-type="#">#</button>
+                <button data-type="@">@</button>
+                <button data-type="robot">></button>
+            </div>
+        </div>
+
             <div id="codingSide">
                 <h2 id="codeTitle">Code</h2>
                 <div id="terminal">></div>
