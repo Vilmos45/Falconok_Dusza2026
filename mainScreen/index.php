@@ -2,8 +2,8 @@
 session_start();
 
 if(!isset($_SESSION["username"])){
-    header("Location: ../"); 
-    exit; 
+    header("Location: ../");
+    exit;
 }
  ?>
 
@@ -12,16 +12,15 @@ if(!isset($_SESSION["username"])){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Falcons' Miner script</title>
-
     <script type="module" src="ui.js"  defer></script>
     <script type="module" src="readFile.js" defer></script>
     <script type="module" src="robot.js" defer></script>
     <script type="module" src="code.js" defer></script>
     <script type="module" src="szerverrol_palya.js" defer></script>
-    <script type="module" src="profil.js" defer></script>
+    <script src="profil.js" defer></script>
     <script type="module" src="mapChange.js" defer></script>
+    <script src="leaderboard.js" defer></script>
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -78,6 +77,10 @@ if(!isset($_SESSION["username"])){
     </header>
     <main>
         <div id="parentDiv">
+            <div>
+                <div>Pálya: 0.map</div>
+                <div>Aranyrögök: 0</div>
+            </div>
             <div id="map">
                 <div id="topBar">
                     <button id="mapChangeButton">térkép szerkesztés</button>
@@ -117,9 +120,13 @@ if(!isset($_SESSION["username"])){
                 <br>
                 <button id="startTheCodeButton" class="btn btn-primary">Start</button>
             </div>
+            <button type="button" id="ranglistaButton">< Ranglista</button>
+            <div id="ranglista">
+
+            </div>
         </div>
     </main>
-    
+
     <dialog id="saveMapDialog">
         <form id="saveMapForm">
             <h2>Pálya mentése</h2>

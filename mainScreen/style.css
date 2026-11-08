@@ -443,3 +443,11 @@ footer {
     justify-content: flex-end;
     gap: 10px;
 }
+
+#ranglistaButton{
+    
+}
+
+#ranglilsta{
+    display: none;
+}

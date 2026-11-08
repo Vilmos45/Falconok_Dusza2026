@@ -1,13 +1,13 @@
-# Dusza2026  
-  
-## Hogy működik a programunk?  
-  
-1. először mindig a bejelentkezéshez visz,   
-    - ahol megadod a felhasználóneved,  
-    - a jelszavad,  
+# Dusza2026
+
+## Hogy működik a programunk?
+
+1. először mindig a bejelentkezéshez visz,
+    - ahol megadod a felhasználóneved,
+    - a jelszavad,
     - majd ha van fiókod, belépsz, ha nincs, regisztrálsz
     - a bejelentkezési adataid a users táblába kerülnek a robotszim adatbázisban.
-  
+
 2. mainScreen
     - ha beléptél, a mainScreenre navigál az oldal.
     - itt láthatod a baloldalt a pályát a robottal
@@ -32,6 +32,8 @@
 
 9. pálya szerkesztése
 
+10. Ranglista megjelenítése/elrejtése
+
 ## mappaszerkezet magyarázata
 /
 - index.php - bejelentkező oldal. ha be vagy jelentkezve, továbbnavigál a mainScreenre.
@@ -40,7 +42,8 @@
 - createdb.sql - ezzel hoztuk létre az adatbázist, azért tartottuk meg, mert jól átlátható
 
 ## amit tud extrán a programunk
- - :)
+- mutatja, hogy hol tart a kód, ami nem pillanatszerűen fut le.
+- mosolyt csal emberek arcára :)
 
 ## amit nem tud a programunk a feladatleíráshoz képest (és dolgoztunk rajta):
  - pályánkénti ranglista a felszedett aranyrögök és a lépések alapján
