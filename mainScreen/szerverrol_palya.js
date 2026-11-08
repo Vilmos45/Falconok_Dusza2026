@@ -1,6 +1,6 @@
 // PÁLYA BETÖLTÉSE SZERVERRŐL
 
-import { isEditing } from "./mapChange.js";
+// import { isEditing } from "./mapChange.js";
 
 const palyaDialog = document.getElementById("palyaDialog");
 const palyaSelect = document.getElementById("palyaSelect");

@@ -1,5 +1,5 @@
 import { map, mapX, mapY, generateTable } from "./ui.js";
-export {isEditing};
+// export {isEditing};
 
 const toggleBtn = document.getElementById("mapChangeButton");
 const editorTools = document.getElementById("editorTools");
