@@ -146,6 +146,19 @@ main {
     
 } */
 
+.robot {
+    background-color: blue;
+    /* color: rgb(45, 255, 45); */
+}
+
+.gold {
+    background-color: gold;
+}
+
+.bedrock{
+    background-color:grey;
+}
+
 #codeTitle{
     margin-top: 1vh;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -381,4 +394,52 @@ footer {
     height: 40px;
     font-size: 18px;
     cursor: pointer;
+}
+
+/* SAVE MAP */
+
+#saveMapDialog {
+    border: none;
+    border-radius: 12px;
+    padding: 25px;
+    width: min(350px, 85vw);
+    box-shadow: 0 5px 25px #0006;
+}
+
+#saveMapDialog::backdrop {
+    background: #0009;
+}
+
+#saveMapForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#saveMapForm h2 {
+    margin: 0;
+}
+
+.filenameInput {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#mapNameInput {
+    min-width: 0;
+    flex: 1;
+    padding: 8px;
+}
+
+#mapSaveError {
+    color: #d33;
+    margin: 0;
+    min-height: 18px;
+}
+
+.dialogButtons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
 }

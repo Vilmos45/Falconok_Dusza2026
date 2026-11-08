@@ -26,6 +26,7 @@
 8. adatbázis
     - az adatbázis létrehozásához a create_db.sql-t írtuk, abban jól látszódik az adatbázis szerkezete
 
+9. pálya szerkesztése
+
 ## amit nem tud a programunk a feladatleíráshoz képest (és dolgoztunk rajta):
  - pályánkénti ranglista a felszedett aranyrögök és a lépések alapján
- - pályák szerkesztés

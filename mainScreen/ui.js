@@ -54,7 +54,7 @@ function generateTable(x, y, arr, init = false) {
             }
             
             cell.addEventListener("click", () => { 
-                cell.contentEditable = "true"; 
+                // cell.contentEditable = "true"; 
                 window.dispatchEvent(new CustomEvent("cellClicked", { detail: { x: j, y: i } })); 
             });
             

@@ -8,6 +8,7 @@ const mapYInput = document.getElementById("mapYInput");
 const fileInput = document.getElementById("fileInput");
 const importBtn = document.getElementById("importBtn");
 const exportBtn = document.getElementById("exportBtn");
+const uploadBtn = document.getElementById("uploadBtn");
 
 let isEditing = false;
 let selectedTool = ".";
@@ -16,7 +17,7 @@ toggleBtn.onclick = () => {
     isEditing = !isEditing;
     editorTools.classList.toggle("hidden", !isEditing);
     palette.classList.toggle("hidden", !isEditing);
-    toggleBtn.textContent = isEditing ? "mentés / bezárás" : "térkép szerkesztés";
+    toggleBtn.textContent = isEditing ? "<< Vissza" : "térkép szerkesztés";
 };
 
 let robotRotationIndex = 1; 
@@ -111,4 +112,112 @@ exportBtn.onclick = () => {
     a.href = URL.createObjectURL(blob);
     a.download = "terkep.txt";
     a.click();
+};
+
+
+const saveMapDialog = document.getElementById("saveMapDialog");
+const saveMapForm = document.getElementById("saveMapForm");
+const mapNameInput = document.getElementById("mapNameInput");
+const mapSaveError = document.getElementById("mapSaveError");
+const cancelMapSave = document.getElementById("cancelMapSave");
+
+// Pálya tartalmának előállítása
+function getMapContent() {
+    const currentX = parseInt(mapXInput.value);
+    const currentY = parseInt(mapYInput.value);
+
+    let text = `${currentY} ${currentX}\n`;
+
+    for (let y = 0; y < currentY; y++) {
+        let rowString = "";
+
+        for (let x = 0; x < currentX; x++) {
+            rowString += map[y]?.[x] || ".";
+        }
+
+        text += rowString + "\n";
+    }
+
+    return text;
+}
+
+/* PÁLYA MENTÉSE SZERVERRE */
+
+// Mentési ablak megnyitása
+uploadBtn.onclick = () => {
+    mapSaveError.textContent = "";
+    mapNameInput.value = "";
+    saveMapDialog.showModal();
+    mapNameInput.focus();
+};
+
+// Ablak bezárása
+cancelMapSave.onclick = () => {
+    saveMapDialog.close();
+};
+
+// Mentés
+saveMapForm.onsubmit = async (event) => {
+    event.preventDefault();
+
+    let name = mapNameInput.value.trim();
+
+    // A .map kiterjesztést automatikusan hozzáadjuk
+    name = name.replace(/\.map$/i, "");
+
+    if (!name || !/^[\p{L}\p{N}_-]+$/u.test(name)) {
+        mapSaveError.textContent =
+            "Érvénytelen fájlnév! Csak betűk, számok, kötőjelek és aláhúzások használhatók.";
+        return;
+    }
+
+    name += ".map";
+
+    const content = getMapContent();
+
+    try {
+        const response = await fetch("./createmap.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: name,
+                content: content
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            // Pályaválasztó frissítése
+            const mapSelect = document.getElementById("palyaSelect");
+
+            if (mapSelect) {
+                let option = document.createElement("option");
+                option.value = name;
+                option.textContent = name;
+                mapSelect.appendChild(option);
+                mapSelect.value = name;
+
+                mapSelect.dispatchEvent(new Event("change"));
+            }
+
+            saveMapDialog.close();
+            return;
+        }
+
+        if (result.error === "exists") {
+            mapSaveError.textContent = "Ez a fájlnév már foglalt!";
+            mapNameInput.focus();
+            mapNameInput.select();
+        } else {
+            mapSaveError.textContent =
+                result.message || "Hiba történt a mentés során.";
+        }
+
+    } catch (error) {
+        console.error(error);
+        mapSaveError.textContent = "Nem sikerült kapcsolódni a szerverhez.";
+    }
 };

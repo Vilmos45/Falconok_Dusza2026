@@ -21,7 +21,7 @@ if(!isset($_SESSION["username"])){
     <script type="module" src="code.js" defer></script>
     <script type="module" src="code_fejlec.js" defer></script>
     <script type="module" src="mapChange.js" defer></script>
-    
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -82,6 +82,7 @@ if(!isset($_SESSION["username"])){
                 <button id="mapChangeButton">térkép szerkesztés</button>
 
                 <div id="editorTools" class="hidden">
+                    <button id="uploadBtn">mentés</button>
                     <button id="importBtn">import</button>
                     <input type="file" id="fileInput" accept=".txt" style="display: none;">
                     <button id="exportBtn">export</button>
@@ -116,6 +117,32 @@ if(!isset($_SESSION["username"])){
             </div>
         </div>
     </main>
+    
+    <dialog id="saveMapDialog">
+        <form id="saveMapForm">
+            <h2>Pálya mentése</h2>
+
+            <label for="mapNameInput">Fájl neve:</label>
+            <div class="filenameInput">
+                <input
+                    type="text"
+                    id="mapNameInput"
+                    placeholder="palya_neve"
+                    required
+                    autocomplete="off"
+                >
+                <span>.map</span>
+            </div>
+
+            <p id="mapSaveError"></p>
+
+            <div class="dialogButtons">
+                <button type="submit">Mentés</button>
+                <button type="button" id="cancelMapSave">Mégse</button>
+            </div>
+        </form>
+    </dialog>
+
     <footer>
         Csakis a Falconok! 2026. Dusza (Vilmos, Maxim és Ádám)
     </footer>
